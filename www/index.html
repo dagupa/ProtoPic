@@ -1,0 +1,4079 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Proto Pics</title>
+<link rel="icon" type="image/png" href="icon.png">
+<style>
+:root {
+  --bg: #eef2f5;
+  --surface: #ffffff;
+  --surface-raised: #f8fafc;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #cbd5e1;
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-ink: #ffffff;
+  --success: #15803d;
+  --success-bg: rgba(21, 128, 61, 0.12);
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --warn: #d97706;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1118;
+    --surface: #151e28;
+    --surface-raised: #1c2633;
+    --ink: #f1f5f9;
+    --muted: #94a3b8;
+    --line: #2a3746;
+    --accent: #38bdf8;
+    --accent-hover: #0ea5e9;
+    --accent-ink: #082f49;
+    --success: #22c55e;
+    --success-bg: rgba(34, 197, 94, 0.15);
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --warn: #f59e0b;
+  }
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  user-select: none;
+  -webkit-user-select: none;
+}
+main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 14px 16px 125px;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.header-logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+.header-logo {
+  height: 42px;
+  max-width: 170px;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badge-count {
+  font-size: 0.78rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.help-icon-btn {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--accent);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform .1s, background-color .15s;
+}
+.help-icon-btn:active {
+  transform: scale(0.92);
+  background: var(--line);
+}
+
+.fields-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin: 12px 0 4px;
+  color: var(--ink);
+}
+label:first-child { margin-top: 0; }
+input[type=text] {
+  width: 100%;
+  font-size: 1rem;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--ink);
+  user-select: auto;
+  -webkit-user-select: auto;
+}
+input[type=text]:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+/* COMBOBOX DE PROYECTO Y OPERACIÓN */
+.combobox-container {
+  position: relative;
+  width: 100%;
+}
+.combobox-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.combobox-input-wrapper input {
+  padding-right: 70px;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+/* Casilla seleccionada: Fondo azul predominante y texto blanco */
+.combobox-input-wrapper input.is-selected {
+  background: var(--accent) !important;
+  color: #ffffff !important;
+  border-color: var(--accent-hover) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.28);
+}
+.combobox-input-wrapper input.is-selected::placeholder {
+  color: rgba(255, 255, 255, 0.72);
+}
+.combobox-input-wrapper.is-selected .combobox-btn {
+  color: #ffffff !important;
+}
+.combobox-btn.has-note {
+  position: relative;
+  color: var(--accent);
+}
+.combobox-btn.has-note::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 1.5px solid var(--surface);
+}
+.combobox-input-wrapper.is-selected .combobox-btn.has-note::after {
+  background: #4ade80;
+  border-color: var(--accent);
+}
+.combobox-actions {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.combobox-btn {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px 8px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.combobox-btn:active { background: var(--line); }
+
+.combobox-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  max-height: 270px;
+  overflow-y: auto;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+  z-index: 80;
+  display: none;
+}
+.combobox-dropdown.open { display: block; }
+.dropdown-header {
+  padding: 6px 12px;
+  background: var(--surface-raised);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+}
+.dropdown-item {
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.dropdown-item:last-child { border-bottom: 0; }
+.dropdown-item:hover, .dropdown-item:active {
+  background: var(--surface-raised);
+}
+.dropdown-item.selected {
+  font-weight: 700;
+  background: rgba(2, 132, 199, 0.08);
+}
+.dropdown-item.has-photos {
+  color: var(--success) !important;
+  font-weight: 700;
+}
+.dropdown-item .photo-tag {
+  background: var(--success-bg);
+  color: var(--success);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.dropdown-item mark {
+  background: rgba(2, 132, 199, 0.25);
+  color: inherit;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+.dropdown-add-item {
+  padding: 12px 14px;
+  background: rgba(21, 128, 61, 0.1);
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  border-bottom: 2px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dropdown-add-item:active { background: rgba(21, 128, 61, 0.2); }
+.dropdown-empty {
+  padding: 14px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 16px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+  transition: transform .08s ease, filter .15s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: .45; pointer-events: none; }
+.btn.alt {
+  background: var(--surface-raised);
+  color: var(--ink);
+  border: 2px solid var(--line);
+}
+.btn.danger { background: var(--danger); color: #fff; }
+.btn.success { background: var(--success); color: #fff; }
+.btn.compact {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  width: auto;
+}
+
+/* OBTURADOR INFERIOR FLOTANTE */
+.bottom-shutter-bar {
+  position: fixed;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 90;
+}
+.shutter-btn {
+  pointer-events: auto;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 3.5px solid #cbd5e1;
+  padding: 0;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: transform .08s ease, filter .15s ease, opacity .15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.shutter-btn:active {
+  transform: scale(0.91);
+}
+.shutter-btn:disabled {
+  opacity: 0.38;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+.shutter-real-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 0 8px;
+}
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.notes-icon-btn {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 1.05rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.notes-icon-btn:active {
+  transform: scale(0.95);
+  background: var(--line);
+}
+.notes-icon-btn.has-note {
+  border-color: var(--accent);
+  background: rgba(2, 132, 199, 0.1);
+}
+.notes-icon-btn.has-note::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  border: 1.5px solid var(--surface);
+}
+.view-toggle {
+  display: flex;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 2px;
+}
+.view-toggle button {
+  background: none;
+  border: 0;
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 600;
+}
+.view-toggle button.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* CARRUSEL DE PASOS */
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+}
+.carousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 4px 18px;
+  scrollbar-width: thin;
+}
+.carousel::-webkit-scrollbar { height: 6px; }
+.carousel::-webkit-scrollbar-track { background: transparent; }
+.carousel::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+.step-card {
+  flex: 0 0 255px;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  position: relative;
+}
+.step-card.dragging {
+  opacity: 0.45;
+  border-color: var(--accent);
+  transform: scale(0.96);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.step-card.drag-over {
+  border-color: var(--accent);
+  border-style: dashed;
+  transform: scale(1.03);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--line);
+  cursor: grab;
+}
+.step-header:active { cursor: grabbing; }
+.step-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.4px;
+}
+.step-grip {
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.step-img-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  overflow: hidden;
+  cursor: pointer;
+}
+.step-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+.step-img-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.step-img-box:hover .step-img-overlay { opacity: 1; }
+
+.step-meta {
+  padding: 8px 10px 4px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: monospace;
+}
+.step-actions {
+  display: flex;
+  gap: 6px;
+  padding: 6px 10px 10px;
+  border-top: 1px solid var(--line);
+}
+.step-actions button {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
+  color: var(--ink);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.step-actions button:active { background: var(--line); }
+
+/* BOTÓN DE MOVER EN CABECERA Y ACCIONES DE TARJETA */
+.step-pin-btn {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all .15s ease;
+}
+.step-pin-btn:active {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+.step-actions .btn-step-nav {
+  flex: 0 0 46px;
+  font-size: 0.95rem;
+}
+.step-actions .btn-action-move {
+  flex: 1;
+  background: rgba(23, 162, 184, 0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.step-actions .btn-action-move:active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* BANNER FLOTANTE DE MODO MOVER */
+.carousel-move-banner {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.08));
+  border: 1.5px solid #f59e0b;
+  border-radius: 10px;
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  animation: fadeInDown .2s ease-out;
+}
+.carousel-move-banner .move-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.carousel-move-banner .move-banner-pin {
+  font-size: 1.3rem;
+  animation: bouncePin 1s infinite alternate ease-in-out;
+}
+@keyframes bouncePin {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); }
+}
+.carousel-move-banner .move-banner-text-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.carousel-move-banner #move-banner-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #b45309;
+}
+.carousel-move-banner .move-banner-sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.carousel-move-banner .cancel-move-btn {
+  background: var(--surface);
+  border: 1px solid #f59e0b;
+  color: #b45309;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.carousel-move-banner .cancel-move-btn:active {
+  background: #f59e0b;
+  color: #fff;
+}
+
+/* ESTILOS DE LA TARJETA EN MOVIMIENTO */
+.step-card.is-being-moved {
+  border: 2px solid #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35), 0 8px 24px rgba(0,0,0,0.18);
+  animation: pulseMovingCard 1.8s infinite ease-in-out;
+}
+@keyframes pulseMovingCard {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.985); }
+}
+.step-card.is-being-moved .step-badge {
+  background: #f59e0b !important;
+  color: #fff !important;
+}
+.step-card.is-being-moved .step-img-box::after {
+  content: "📌 FOTO EN MOVIMIENTO";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.82);
+  color: #fbbf24;
+  font-weight: 800;
+  font-size: 0.72rem;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #f59e0b;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+.step-card.just-moved {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.45) !important;
+  transition: all .5s ease;
+}
+
+/* BOTONES DE DESTINO EN MODO MOVER */
+.step-actions .btn-cancel-move-card {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid #f59e0b;
+  color: #b45309;
+  font-weight: 700;
+  flex: 1;
+  padding: 9px;
+  font-size: 0.82rem;
+}
+.step-actions .btn-cancel-move-card:active {
+  background: #f59e0b;
+  color: #fff;
+}
+.step-actions .btn-place-target {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1.5px solid #10b981;
+  color: #047857;
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 9px 4px;
+  flex: 1;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background .12s, transform .1s;
+}
+.step-actions .btn-place-target:active {
+  background: #10b981;
+  color: #fff;
+  transform: scale(0.96);
+}
+
+/* VISTA MOSAICO CON REORDENACIÓN TÁCTIL */
+.grid-view {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.grid-item {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1;
+  cursor: grab;
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.grid-item:active { cursor: grabbing; }
+.grid-item.dragging {
+  opacity: 0.45;
+  border-color: var(--accent);
+  transform: scale(0.92);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+.grid-item.drag-over {
+  border-color: var(--accent);
+  border-style: dashed;
+  transform: scale(1.05);
+}
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+.grid-item .badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.grid-item .grip-hint {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.grid-item .name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 0.68rem;
+  padding: 3px 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* VISOR A PANTALLA COMPLETA */
+#viewer {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  z-index: 100;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+#viewer.on { display: flex; }
+#viewer .viewer-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+  touch-action: none;
+}
+#viewer img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transform-origin: center center;
+  transition: transform 0.05s ease-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  will-change: transform;
+}
+#viewer .viewer-bar {
+  padding: 14px 16px;
+  background: #111827;
+  color: #fff;
+  border-top: 1px solid #1f2937;
+}
+#viewer .viewer-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+#viewer .viewer-title strong { font-size: 1.1rem; color: #fff; }
+#viewer .viewer-title span { font-size: 0.82rem; color: #9ca3af; font-family: monospace; }
+#viewer .viewer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#viewer .secondary-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+/* MODAL DE AYUDA A PETICIÓN */
+#help-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 150;
+  backdrop-filter: blur(3px);
+}
+#help-modal.on { display: flex; }
+.help-card {
+  background: var(--surface);
+  color: var(--ink);
+  width: 100%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+.help-card h2 {
+  font-size: 1.25rem;
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.help-section {
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.help-section:last-of-type { border-bottom: 0; padding-bottom: 0; }
+.help-section h3 {
+  font-size: 0.95rem;
+  margin: 0 0 6px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.help-section p {
+  font-size: 0.86rem;
+  color: var(--muted);
+  margin: 0 0 4px;
+  line-height: 1.45;
+}
+.help-path-box {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--ink);
+  word-break: break-all;
+  margin-top: 6px;
+}
+
+/* ESTILOS DE ELEMENTOS E ICONOS REALES EN EL MANUAL DE AYUDA */
+.help-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+.help-title-logo {
+  height: 34px;
+  max-width: 130px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.help-title-bar h2 {
+  font-size: 1.15rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.help-ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  vertical-align: middle;
+  margin: 0 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.help-ui-btn.round {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  padding: 0;
+  color: var(--accent);
+}
+.help-ui-btn.small {
+  padding: 1px 6px;
+  font-size: 0.76rem;
+}
+.help-ui-btn.success {
+  background: var(--success);
+  color: #ffffff;
+  border-color: var(--success);
+}
+.help-ui-btn.danger {
+  background: var(--danger);
+  color: #ffffff;
+  border-color: var(--danger);
+}
+.help-ui-btn.alt {
+  background: var(--surface-raised);
+  color: var(--ink);
+  border-color: var(--line);
+}
+.help-ui-btn.voice {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+.help-pill-selected {
+  display: inline-block;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  vertical-align: middle;
+}
+.help-tag-green {
+  display: inline-block;
+  color: var(--success);
+  font-weight: 700;
+  background: var(--success-bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  vertical-align: middle;
+}
+.help-shutter-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  vertical-align: middle;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  margin: 0 4px;
+  display: inline-block;
+}
+.help-toggle-btn {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  vertical-align: middle;
+}
+.help-toggle-btn.active {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+.help-badge-count {
+  display: inline-block;
+  font-size: 0.76rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.help-grip {
+  color: var(--muted);
+  font-size: 1.15rem;
+  font-weight: 800;
+  vertical-align: middle;
+  padding: 0 3px;
+  letter-spacing: -1px;
+}
+.help-dot-green {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+/* MODAL DE NOTAS DE OPERACIÓN (notas.txt) Y DICTADO POR VOZ */
+#notes-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.68);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 155;
+  backdrop-filter: blur(3px);
+}
+#notes-modal.on { display: flex; }
+.notes-card {
+  background: var(--surface);
+  color: var(--ink);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.notes-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+.notes-header h2 {
+  font-size: 1.2rem;
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.notes-sub {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+.notes-path {
+  font-family: monospace;
+  font-size: 0.74rem;
+  color: var(--muted);
+  background: var(--surface-raised);
+  padding: 3px 6px;
+  border-radius: 6px;
+  margin-top: 4px;
+  display: inline-block;
+  word-break: break-all;
+}
+
+/* Barra de dictado por voz */
+.voice-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.btn-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.btn-voice:active {
+  transform: scale(0.97);
+}
+.btn-voice.listening {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  animation: pulse-mic 1.2s infinite ease-in-out;
+}
+@keyframes pulse-mic {
+  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+.voice-status-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+.voice-status {
+  font-size: 0.79rem;
+  color: var(--muted);
+  line-height: 1.2;
+}
+.voice-live {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 2px;
+  min-height: 1.1em;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Área de texto */
+.notes-input-box {
+  width: 100%;
+}
+.notes-input-box textarea {
+  width: 100%;
+  background: var(--surface-raised);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  line-height: 1.45;
+  resize: vertical;
+  min-height: 135px;
+  outline: none;
+  box-sizing: border-box;
+}
+.notes-input-box textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+.notes-hint {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.notes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.notes-actions .btn {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Banner de nota encima de la secuencia */
+.op-notes-banner {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.op-notes-banner-icon {
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+.op-notes-banner-body {
+  flex: 1;
+  min-width: 0;
+}
+.op-notes-banner-body strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+.op-notes-banner-body p {
+  margin: 2px 0 0;
+  font-size: 0.86rem;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 3.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* MODAL DE TRASPASO DE OPERACIÓN */
+#mover {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: flex-end;
+  z-index: 110;
+}
+#mover.on { display: flex; }
+.sheet {
+  background: var(--surface);
+  color: var(--ink);
+  width: 100%;
+  max-height: 85%;
+  overflow-y: auto;
+  padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+  border-radius: 20px 20px 0 0;
+}
+.sheet h2 { font-size: 1.15rem; margin: 0 0 6px; }
+.sheet p { font-size: 0.85rem; color: var(--muted); margin: 0 0 12px; }
+
+/* BUSCADOR Y LISTA EN EL MODAL MOVER */
+.mover-proj-group {
+  margin-bottom: 12px;
+}
+.mover-proj-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+.mover-proj-select {
+  width: 100%;
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-weight: 600;
+}
+.mover-proj-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.mover-search-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+.mover-search-wrapper input {
+  padding-right: 36px;
+}
+.mover-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 4px;
+}
+.mover-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  margin-bottom: 12px;
+}
+.mover-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 12px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.mover-item:last-child { border-bottom: 0; }
+.mover-item:active { background: var(--surface-raised); }
+.mover-item.has-photos {
+  color: var(--success) !important;
+  font-weight: 700;
+}
+.mover-item .photo-tag {
+  background: var(--success-bg);
+  color: var(--success);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.mover-create-item {
+  padding: 12px 14px;
+  background: rgba(21, 128, 61, 0.12);
+  color: var(--success);
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  border-bottom: 2px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mover-create-item:active { background: rgba(21, 128, 61, 0.22); }
+.mover-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* TOAST DE FEEDBACK */
+#toast {
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  background: #0f172a;
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 200;
+}
+#toast.on { display: flex; animation: slideUp .2s ease-out; }
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  background: var(--surface);
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--muted);
+}
+.empty-state .icon { font-size: 2.2rem; margin-bottom: 6px; }
+.empty-state p { margin: 4px 0 0; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="header-logo-wrapper">
+      <img src="logo.png" alt="Proto Pics" class="header-logo">
+    </div>
+    <div class="header-actions">
+      <div id="item-count" class="badge-count">0 fotos</div>
+      <button type="button" class="help-icon-btn" id="help-btn" title="Ayuda e instrucciones">?</button>
+    </div>
+  </header>
+
+  <div class="fields-card">
+    <label for="proj">Equipo (selecciona a crea uno nuevo)</label>
+    <div class="combobox-container" id="proj-combobox">
+      <div class="combobox-input-wrapper">
+        <input type="text" id="proj" autocomplete="off" placeholder="Busca o escribe un proyecto...">
+        <div class="combobox-actions">
+          <button type="button" class="combobox-btn" id="proj-clear" title="Limpiar" style="display:none;">✕</button>
+          <button type="button" class="combobox-btn" id="proj-toggle" title="Ver proyectos">▼</button>
+        </div>
+      </div>
+      <div class="combobox-dropdown" id="proj-dropdown"></div>
+    </div>
+
+    <label for="op">Operación de montaje</label>
+    <div class="combobox-container" id="op-combobox">
+      <div class="combobox-input-wrapper">
+        <input type="text" id="op" autocomplete="off" placeholder="Busca o escribe una operación...">
+        <div class="combobox-actions">
+          <button type="button" class="combobox-btn" id="op-clear" title="Limpiar" style="display:none;">✕</button>
+          <button type="button" class="combobox-btn" id="op-toggle" title="Ver todas las operaciones">▼</button>
+        </div>
+      </div>
+      <div class="combobox-dropdown" id="op-dropdown"></div>
+    </div>
+  </div>
+
+  <!-- BANNER DE NOTA DE LA OPERACIÓN -->
+  <div id="op-notes-banner" class="op-notes-banner" style="display:none;">
+    <div class="op-notes-banner-icon">📝</div>
+    <div class="op-notes-banner-body">
+      <strong>Nota de la operación</strong>
+      <p id="op-notes-banner-preview"></p>
+    </div>
+    <button type="button" class="btn compact" id="op-notes-banner-edit">Editar</button>
+  </div>
+
+  <input type="file" id="cam" accept="image/*" capture="environment" hidden>
+
+  <div class="view-controls">
+    <h2 class="section-title">
+      Secuencia de montaje
+      <button type="button" class="notes-icon-btn" id="op-notes-btn" title="Añadir o ver nota de la operación">📝</button>
+    </h2>
+    <div class="view-toggle">
+      <button id="view-carousel-btn" class="active" title="Vista Carrusel">Carrusel</button>
+      <button id="view-grid-btn" title="Vista Mosaico">Mosaico</button>
+    </div>
+  </div>
+
+  <!-- Vista Carrusel Horizontal -->
+  <div class="carousel-wrapper" id="carousel-container">
+    <div id="carousel-move-banner" class="carousel-move-banner" style="display:none;">
+      <div class="move-banner-info">
+        <span class="move-banner-pin">📌</span>
+        <div class="move-banner-text-wrap">
+          <span id="move-banner-title">Moviendo <strong>Paso 01</strong></span>
+          <span class="move-banner-sub">Desliza el carrusel y pulsa "Colocar aquí"</span>
+        </div>
+      </div>
+      <button type="button" id="cancel-move-btn" class="cancel-move-btn">✖ Cancelar</button>
+    </div>
+    <div class="carousel" id="carousel"></div>
+  </div>
+
+  <!-- Vista Mosaico / Cuadrícula (con drag & drop táctil) -->
+  <div class="grid-view" id="grid" style="display:none;"></div>
+
+  <!-- Estado Vacío -->
+  <div class="empty-state" id="empty-state" style="display:none;">
+    <div class="icon">📷</div>
+    <strong>No hay fotos en esta operación todavía</strong>
+    <p>Pulsa el obturador de cámara inferior para comenzar a documentar el prototipo.</p>
+  </div>
+
+  <!-- OBTURADOR INFERIOR FLOTANTE -->
+  <div class="bottom-shutter-bar">
+    <button type="button" class="shutter-btn" id="shot" title="Hacer foto para este paso" disabled>
+      <img src="shutter.png" alt="Obturador" class="shutter-real-img">
+    </button>
+  </div>
+</main>
+
+<!-- MODAL DE AYUDA A PETICIÓN -->
+<div id="help-modal">
+  <div class="help-card">
+    <div class="help-title-bar">
+      <img src="logo.png" alt="Proto Pics" class="help-title-logo">
+      <h2>📖 Manual de Usuario</h2>
+    </div>
+
+    <div class="help-section">
+      <h3>❄️ Selección de Equipo (Modelo)</h3>
+      <p>Cada equipo dispone de su propia carpeta aislada en el almacenamiento del teléfono. Pulsa <span class="help-ui-btn">▼</span> para desplegar los equipos existentes o escribe directamente para crear uno nuevo.</p>
+      <p>Al seleccionar un equipo, su recuadro se resalta con <span class="help-pill-selected">fondo azul y texto blanco</span>. Puedes vaciar la casilla con <span class="help-ui-btn">✕</span>. El teclado sólo se abre al tocar directamente dentro de la zona de texto.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>⚙️ Operación de montaje</h3>
+      <p>Catálogo ordenado alfabéticamente (A - Z) con buscador en tiempo real. Pulsa <span class="help-ui-btn">▼</span> para ver el listado o escribe para filtrar. Si la operación no existe, aparecerá la opción <strong>➕ Añadir nueva</strong> para guardarla en el catálogo.</p>
+      <p>Las operaciones con fotos ya tomadas se muestran con su texto en color verde y la etiqueta <span class="help-tag-green">📷 X fotos</span>. Al seleccionarla, la casilla se ilumina en <span class="help-pill-selected">fondo azul y texto blanco</span>.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>📝 Notas de la operación y Dictado por voz</h3>
+      <p>Pulsa el icono <span class="help-ui-btn">📝</span> situado a la derecha de "Secuencia de montaje" para abrir el editor de notas:</p>
+      <p>• <strong>Teclado</strong>: Escribe cómodamente observaciones o indicaciones técnicas.</p>
+      <p>• <strong>Dictado por voz</strong>: Pulsa <span class="help-ui-btn voice">🎙️ Dictar por voz</span> para hablar al micrófono. Se iluminará en rojo y transcribirá tus palabras en vivo sin repeticiones. Al terminar, pulsa <span class="help-ui-btn">Detener dictado</span>.</p>
+      <p>• Al guardar con <span class="help-ui-btn success">💾 Guardar nota</span>, el icono mostrará un punto verde <span class="help-dot-green"></span> y aparecerá una barra resumen sobre la secuencia con el botón <span class="help-ui-btn small">Editar</span>.</p>
+    </div>
+
+    <div class="help-section">
+      <h3><img src="shutter.png" class="help-shutter-icon"> Disparador con sonido de cámara</h3>
+      <p>El botón inferior con el icono del obturador metálico <img src="shutter.png" class="help-shutter-icon"> permite capturar la foto para la fase actual con <strong>una única confirmación</strong>. Emite el sonido mecánico de obturador réflex y vibración táctil, añadiendo la imagen de inmediato a la secuencia.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>🔲 Vistas: Carrusel vs Mosaico</h3>
+      <p>Alterna entre las dos modalidades de visualización con los botones superiores:</p>
+      <p>• <span class="help-toggle-btn active">Carrusel</span>: Tarjetas horizontales de gran tamaño que se desplazan con el dedo para seguir el paso a paso.</p>
+      <p>• <span class="help-toggle-btn">Mosaico</span>: Cuadrícula compacta de 2 columnas para una visión global y rápida de todo el proceso de montaje.</p>
+      <p>• En la cabecera puedes ver el total acumulado en <span class="help-badge-count">X fotos</span>.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>✋ Reorganización táctil y renumeración continua</h3>
+      <p>Para cambiar el orden de los pasos con total comodidad:</p>
+      <p>• <strong>Modo 2 toques (Recomendado)</strong>: Pulsa el botón <span class="help-ui-btn">📌 Mover</span> en la foto que desees reubicar, desplázate suavemente por el carrusel hasta la posición deseada y pulsa <span class="help-ui-btn success">⇤ Colocar antes</span> o <span class="help-ui-btn success">Colocar después ⇥</span>.</p>
+      <p>• <strong>Paso a paso</strong>: Usa las flechas <span class="help-ui-btn">◀</span> y <span class="help-ui-btn">▶</span> para mover la foto 1 posición hacia la izquierda o derecha.</p>
+      <p>• <strong>Arrastrar y soltar</strong>: También puedes mantener pulsada cualquier tarjeta sobre el agarre <span class="help-grip">⋮⋮</span> y arrastrarla directamente.</p>
+      <p>La aplicación <strong>renumera automáticamente todos los archivos en disco</strong> (<code>_001.jpg</code>, <code>_002.jpg</code>...) de forma continua y segura sin dejar huecos.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>🔍 Visor táctil con Zoom de pinza</h3>
+      <p>Toca cualquier fotografía para examinarla a pantalla completa:</p>
+      <p>• <strong>Zoom de pinza</strong>: Pellizca con 2 dedos sobre la pantalla para ampliar desde 1× hasta 5.5×.</p>
+      <p>• <strong>Desplazamiento</strong>: Arrastra con 1 dedo para recorrer cualquier zona ampliada.</p>
+      <p>• <strong>Doble toque</strong>: Amplía rápidamente o restablece la imagen a su tamaño normal.</p>
+      <p>• Pulsa <span class="help-ui-btn success">✓ Foto Correcta</span> para confirmar, o <span class="help-ui-btn danger">🗑️ Borrar Foto</span> para eliminarla y renumerar las restantes.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>↔️ Mover fotos a otra operación o a otro Equipo</h3>
+      <p>Desde el visor a pantalla completa, pulsa <span class="help-ui-btn alt">↔️ Mover a otra operación</span>:</p>
+      <p>Podrás transferir la foto a otra fase del mismo equipo o incluso a <strong>otro Equipo diferente</strong>, con opción de crear equipos u operaciones nuevas al instante. La renumeración se aplica automáticamente en origen y en destino.</p>
+    </div>
+
+    <div class="help-section">
+      <h3>💻 Traspaso al PC por cable USB</h3>
+      <p>Conecta el teléfono al ordenador con cable USB (Modo MTP / Transferencia de archivos). Podrás copiar todas las fotografías y notas directamente sin programas adicionales desde:</p>
+      <div class="help-path-box" id="help-folder-path">Este equipo \ Tu Teléfono \ DCIM \ Prototipos \ [Equipo] \ ...</div>
+    </div>
+
+    <div class="help-section" style="border-top:1px dashed var(--danger, #d93838); padding-top:14px; margin-top:8px;">
+      <h3 style="color:var(--danger, #d93838); font-size:1rem;">🗑️ Restablecer y borrar contenido</h3>
+      <p style="font-size:0.85rem; color:var(--muted);">Elimina todos los proyectos, fotografías y notas para comenzar completamente de cero.</p>
+      <button type="button" class="btn alt" id="wipe-all-btn" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; width:100%; font-weight:700; margin-top:8px;">🗑️ Borrar todo y comenzar de cero</button>
+    </div>
+
+    <button type="button" class="btn" id="help-close-btn" style="margin-top:14px;">Entendido</button>
+  </div>
+</div>
+
+<!-- MODAL DE NOTAS DE TEXTO Y DICTADO POR VOZ -->
+<div id="notes-modal">
+  <div class="notes-card">
+    <div class="notes-header">
+      <div>
+        <h2>📝 Nota de la Operación</h2>
+        <div class="notes-sub" id="notes-context-sub">Operación: ...</div>
+        <div class="notes-path" id="notes-file-path">DCIM \ Prototipos \ ...</div>
+      </div>
+      <button type="button" class="btn compact alt" id="notes-close-btn">✕</button>
+    </div>
+
+    <!-- Barra de Dictado por Voz -->
+    <div class="voice-bar">
+      <button type="button" class="btn-voice" id="voice-record-btn">
+        <span class="mic-icon">🎙️</span>
+        <span id="voice-btn-label">Dictar por voz</span>
+      </button>
+      <div class="voice-status-wrapper">
+        <div class="voice-status" id="voice-status">Toca para dictar o escribe en el recuadro</div>
+        <div class="voice-live" id="voice-live"></div>
+      </div>
+    </div>
+
+    <!-- Área de Texto -->
+    <div class="notes-input-box">
+      <textarea id="notes-textarea" rows="6" placeholder="Escribe aquí las observaciones o instrucciones para esta fase de montaje, o pulsa 'Dictar por voz'..."></textarea>
+    </div>
+
+    <div class="notes-hint">
+      💡 <em>Puedes escribir con el teclado, pulsar 'Dictar por voz' o usar el micrófono del teclado de Android.</em>
+    </div>
+
+    <!-- Acciones del Modal -->
+    <div class="notes-actions">
+      <button type="button" class="btn success" id="notes-save-btn">💾 Guardar nota</button>
+      <button type="button" class="btn danger" id="notes-delete-btn" style="display:none;">🗑️ Eliminar nota</button>
+      <button type="button" class="btn alt" id="notes-cancel-btn">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- VISOR Y VERIFICACIÓN DE FOTO -->
+<div id="viewer">
+  <div class="viewer-stage">
+    <img id="vimg" alt="Foto del paso">
+  </div>
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <div>
+        <strong id="vstep-title">Paso 01</strong>
+        <div id="vname">archivo.jpg</div>
+      </div>
+      <button class="btn compact alt" id="vclose">Cerrar</button>
+    </div>
+    
+    <div class="viewer-actions">
+      <button class="btn success" id="vok">✓ Foto Correcta</button>
+      <button class="btn danger" id="vdel">🗑️ Borrar Foto</button>
+    </div>
+    
+    <div class="secondary-actions">
+      <button class="btn alt" id="vmove">↔️ Mover a otra operación</button>
+    </div>
+  </div>
+
+  <!-- Submodal para mover de operación con catálogo completo, filtro y creación -->
+  <div id="mover">
+    <div class="sheet">
+      <h2>Mover foto a otro proyecto u operación</h2>
+      <p>Elige el proyecto y la operación de destino para esta imagen:</p>
+
+      <div class="mover-proj-group">
+        <label for="mproj-select">Proyecto de destino:</label>
+        <select id="mproj-select" class="mover-proj-select"></select>
+        <input type="text" id="mproj-new" autocomplete="off" placeholder="Escribe el nombre del nuevo proyecto..." style="display:none; margin-top:6px;">
+      </div>
+      
+      <label for="msearch" style="font-size:0.85rem; font-weight:700; margin: 8px 0 4px; display:block;">Operación de destino:</label>
+      <div class="mover-search-wrapper">
+        <input type="text" id="msearch" autocomplete="off" placeholder="Buscar operación o escribir nueva...">
+        <button type="button" class="mover-search-clear" id="mclear" style="display:none;">✕</button>
+      </div>
+
+      <div class="mover-list" id="mlist"></div>
+
+      <button class="btn alt" id="mcancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">
+  <span id="toast-text">Mensaje</span>
+</div>
+
+<script>
+(function(){
+  // LISTA BASE DE OPERACIONES FRECUENTES
+  var BASE_OPERATIONS = [
+    "AISLAMIENTO",
+    "BARNIZADO DE TUBERÍA",
+    "CABLEADO DE ZONA AIRE EXTERIOR",
+    "CABLEADO DE ZONA AIRE EXTERIOR LADO 1",
+    "CABLEADO DE ZONA AIRE EXTERIOR LADO 2",
+    "CABLEADO DE ZONA CONDENSADORA",
+    "CABLEADO DE ZONA CONDENSADORA CENTRAL",
+    "CABLEADO DE ZONA CONDENSADORA LADO 1",
+    "CABLEADO DE ZONA CONDENSADORA LADO 2",
+    "CABLEADO DE ZONA DE RESISTENCIAS",
+    "CABLEADO DE ZONA EXTRACTORA",
+    "CABLEADO DE ZONA PANEL DE CONTROL",
+    "CABLEADO ZONA DE RETORNO",
+    "CABLEADO ZONA DE RETORNO LADO 1",
+    "CABLEADO ZONA DE RETORNO LADO 2",
+    "CABLEADO ZONA EVAPORADORA",
+    "CABLEADO ZONA EVAPORADORA LADO 1",
+    "CABLEADO ZONA EVAPORADORA LADO 2",
+    "CARGA DE REFRIGERANTE",
+    "CONEXIONADO DE ELEMENTOS",
+    "ENMASILLADO",
+    "ETIQUETADO",
+    "FIJACIÓN DE TAPAS",
+    "FIJACIÓN DE TRENCILLAS",
+    "FIJACIÓN DE TUBERÍA FRIGORÍFICA",
+    "MONTAJE DE ARO Y VENTILADOR",
+    "MONTAJE DE BANDEJA",
+    "MONTAJE DE BASTIDOR DE RESISTENCIAS",
+    "MONTAJE DE BATERÍAS CONDENSADORAS",
+    "MONTAJE DE BATERÍAS EVAPORADORAS",
+    "MONTAJE DE CIRCUITO NEUMÁTICO",
+    "MONTAJE DE COMPUERTA DE AIRE FRESCO",
+    "MONTAJE DE COMPUERTA DE RETORNO",
+    "MONTAJE DE COMPUERTAS ONDAS DE PRESIÓN",
+    "MONTAJE DE COMPRESORES",
+    "MONTAJE DE COQUILLA",
+    "MONTAJE DE DESAGÜES",
+    "MONTAJE DE FILTROS DE AIRE",
+    "MONTAJE DE MOTOR EXTRACTOR",
+    "MONTAJE DE MOTORES CONDENSADORES",
+    "MONTAJE DE MOTORES EVAPORADORES",
+    "MONTAJE DE PANEL DE CONTROL",
+    "MONTAJE DE RACK DE CONTROL",
+    "MONTAJE DE SEPARADOR DE GOTAS AIRE EXTERIOR",
+    "MONTAJE DE SEPARADOR DE GOTAS BATERÍA",
+    "PREPARACIÓN DE BANDEJA",
+    "PREPARACIÓN DE BASTIDOR",
+    "PREPARACIÓN DE BASTIDOR DE RESISTENCIAS",
+    "PREPARACIÓN DE BATERÍAS CONDENSADORAS",
+    "PREPARACIÓN DE BATERÍAS EVAPORADORAS",
+    "PREPARACIÓN DE COMPUERTA DE AIRE FRESCO",
+    "PREPARACIÓN DE COMPUERTA DE RETORNO",
+    "PREPARACIÓN DE COMPUERTAS DE ONDAS DE PRESIÓN",
+    "PREPARACIÓN DE COMPRESORES",
+    "PREPARACIÓN DE MOTOR EXTRACTOR",
+    "PREPARACIÓN DE MOTORES CONDENSADORES",
+    "PREPARACIÓN DE MOTORES EVAPORADORES",
+    "PRUEBA DE ESTANQUEIDAD CIRCUITO NEUMÁTICO",
+    "PRUEBA DE FUGAS",
+    "PRUEBA DE INUNDACIÓN",
+    "PRUEBA DE LLUVIA",
+    "PRUEBA DE ONDAS DE PRESIÓN",
+    "PRUEBA DE SALTO DE PRESOSTATOS",
+    "REMACHADO DE PLACAS",
+    "REVISIÓN FINAL",
+    "SOLDADURA DE CIRCUITO",
+    "VACÍO Y DESHIDRATADO"
+  ];
+
+  var Cap = window.Capacitor;
+  var FS = Cap && Cap.Plugins && Cap.Plugins.Filesystem;
+  var MediaScanner = null;
+  if(Cap){
+    if(typeof Cap.registerPlugin === 'function'){
+      try {
+        MediaScanner = Cap.registerPlugin('MediaScanner');
+      } catch(e) {
+        MediaScanner = Cap.Plugins && Cap.Plugins.MediaScanner;
+      }
+    } else if(Cap.Plugins){
+      MediaScanner = Cap.Plugins.MediaScanner;
+    }
+  }
+  var native = !!(Cap && Cap.isNativePlatform && Cap.isNativePlatform());
+  var STORAGE_DIR = 'EXTERNAL_STORAGE';
+  var ROOT = 'DCIM/Prototipos';
+
+  function triggerMediaScan(path){
+    try {
+      if(MediaScanner && typeof MediaScanner.scanPath === 'function'){
+        MediaScanner.scanPath({ path: path || 'DCIM/Prototipos' });
+      }
+    } catch(e){}
+  }
+  var memory = {}; // Respaldo en memoria para desarrollo en navegador
+  var currentFile = null;
+  var currentFilesList = [];
+  var currentView = 'carousel'; // 'carousel' | 'grid'
+  var busy = false;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var proj = $('proj'), projDropdown = $('proj-dropdown'), projClear = $('proj-clear'), projToggle = $('proj-toggle');
+  var op = $('op'), opDropdown = $('op-dropdown'), opClear = $('op-clear'), opToggle = $('op-toggle');
+  var shot = $('shot'), cam = $('cam');
+  var carousel = $('carousel'), grid = $('grid'), emptyState = $('empty-state');
+  var itemCountEl = $('item-count');
+  var helpModal = $('help-modal'), helpBtn = $('help-btn'), helpCloseBtn = $('help-close-btn');
+  var helpFolderPath = $('help-folder-path');
+  var msearch = $('msearch'), mclear = $('mclear'), mlist = $('mlist'), moverModal = $('mover');
+  var mprojSelect = $('mproj-select'), mprojNew = $('mproj-new');
+
+  function clean(s){
+    if(!s) return '';
+    return s.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[^\w\- ]+/g,'').replace(/\s+/g,'_').slice(0,60);
+  }
+
+  function normalizeSearch(s){
+    if(!s) return '';
+    return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  }
+
+  function pad(n){ return String(n).padStart(3, '0'); }
+
+  function toast(t){
+    var e = $('toast');
+    $('toast-text').textContent = t;
+    e.className = 'on';
+    clearTimeout(e._timer);
+    e._timer = setTimeout(function(){ e.className = ''; }, 2600);
+  }
+
+  // MODAL DE AYUDA A PETICIÓN
+  helpBtn.onclick = function(){
+    var projectClean = clean(proj.value) || 'NombreProyecto';
+    helpFolderPath.textContent = 'Este equipo \\ Tu Teléfono \\ ' + ROOT.replace(/\//g, ' \\ ') + ' \\ ' + projectClean + ' \\';
+    helpModal.classList.add('on');
+  };
+  helpCloseBtn.onclick = function(){
+    helpModal.classList.remove('on');
+  };
+  helpModal.onclick = function(e){
+    if(e.target === helpModal) helpModal.classList.remove('on');
+  };
+
+  // GESTIÓN DE CARPETAS DE PROYECTOS (DESDUPLICADA Y ATÓMICA)
+  var projRenderCounter = 0;
+
+  async function nativeListFiles(path){
+    if(MediaScanner && typeof MediaScanner.listFiles === 'function'){
+      try {
+        var res = await MediaScanner.listFiles({ path: path });
+        return (res && res.files) ? res.files : [];
+      } catch(e){}
+    }
+    if(native){
+      try {
+        var r = await FS.readdir({ path: path, directory: STORAGE_DIR });
+        return r.files || [];
+      } catch(e){}
+    }
+    return null;
+  }
+
+  async function listProjects(){
+    var set = {};
+
+    // 1. Proyectos físicos en almacenamiento
+    var nativeFiles = await nativeListFiles(ROOT);
+    if(nativeFiles !== null){
+      nativeFiles.forEach(function(f){
+        var isDir = (f && f.isDirectory !== undefined) ? f.isDirectory : true;
+        var name = (f && f.name) ? f.name : f;
+        if(typeof name === 'string' && isDir && !/\.jpg$|\.tmp/i.test(name)){
+          var c = clean(name);
+          if(c && c !== 'Sin_Proyecto'){
+            set[c.toLowerCase()] = name.trim();
+          }
+        }
+      });
+
+      // 2. Sincronizar localStorage con el disco físico:
+      // Si el operario borró la carpeta desde el PC, la eliminamos de la lista guardada
+      try {
+        var saved = JSON.parse(localStorage.getItem('protopic_projects_list') || '[]');
+        var updated = saved.filter(function(p){
+          var c = clean(p);
+          return c && set[c.toLowerCase()];
+        });
+        localStorage.setItem('protopic_projects_list', JSON.stringify(updated));
+      } catch(e){}
+    } else {
+      var prefix = ROOT + '/';
+      Object.keys(memory).forEach(function(k){
+        if(k.indexOf(prefix) === 0){
+          var rest = k.slice(prefix.length);
+          var slash = rest.indexOf('/');
+          if(slash !== -1){
+            var pName = rest.slice(0, slash);
+            var c = clean(pName);
+            if(c && c !== 'Sin_Proyecto') set[c.toLowerCase()] = pName.trim();
+          }
+        }
+      });
+      try {
+        var savedMem = JSON.parse(localStorage.getItem('protopic_projects_list') || '[]');
+        savedMem.forEach(function(p){
+          var c = clean(p);
+          if(c && c !== 'Sin_Proyecto' && !set[c.toLowerCase()]){
+            set[c.toLowerCase()] = p.trim();
+          }
+        });
+      } catch(e){}
+    }
+
+    var list = Object.values(set);
+    list.sort(function(a, b){
+      return a.localeCompare(b, 'es', { sensitivity: 'base' });
+    });
+    return list;
+  }
+
+  async function createProject(name){
+    var trimmed = name.trim();
+    var cleaned = clean(trimmed);
+    if(!cleaned) return;
+
+    try {
+      var saved = JSON.parse(localStorage.getItem('protopic_projects_list') || '[]');
+      if(!saved.some(function(p){ return clean(p).toLowerCase() === cleaned.toLowerCase(); })){
+        saved.push(trimmed);
+        localStorage.setItem('protopic_projects_list', JSON.stringify(saved));
+      }
+    } catch(e){}
+
+    if(MediaScanner && typeof MediaScanner.mkdir === 'function'){
+      try {
+        await MediaScanner.mkdir({ path: ROOT + '/' + cleaned });
+      } catch(e){}
+    } else if(native){
+      try {
+        await FS.mkdir({ path: ROOT + '/' + cleaned, directory: STORAGE_DIR, recursive: true });
+        triggerMediaScan(ROOT + '/' + cleaned);
+      } catch(e){}
+    }
+  }
+
+  // Conteo de fotos totales de un proyecto
+  async function getProjectPhotoCount(projectName){
+    var pClean = clean(projectName);
+    if(!pClean) return 0;
+    var files = await nativeListFiles(ROOT + '/' + pClean);
+    if(files !== null){
+      return files.map(function(f){ return (f && f.name) ? f.name : f; })
+        .filter(function(n){ return /\.jpg$/i.test(n); }).length;
+    }
+    var p = ROOT + '/' + pClean + '/';
+    return Object.keys(memory).filter(function(k){ return k.indexOf(p) === 0 && /\.jpg$/i.test(k); }).length;
+  }
+
+  // RENDERIZADO DEL DESPLEGABLE DE PROYECTOS
+  async function renderProjDropdown(filterText){
+    var thisRenderId = ++projRenderCounter;
+    var all = await listProjects();
+    if(thisRenderId !== projRenderCounter) return;
+
+    var search = normalizeSearch(filterText);
+    var matched = [];
+
+    if(!search){
+      matched = all;
+    } else {
+      matched = all.filter(function(item){
+        return normalizeSearch(item).indexOf(search) !== -1;
+      });
+    }
+
+    var counts = await Promise.all(matched.map(function(item){ return getProjectPhotoCount(item); }));
+    if(thisRenderId !== projRenderCounter) return;
+
+    projDropdown.innerHTML = '';
+
+    var head = document.createElement('div');
+    head.className = 'dropdown-header';
+    head.innerHTML = '<span>Carpetas de Proyectos</span><span>' + matched.length + ' de ' + all.length + '</span>';
+    projDropdown.appendChild(head);
+
+    // Opción para crear nuevo proyecto si no existe exactamente
+    var exactMatch = all.some(function(item){ return normalizeSearch(item) === search; });
+    if(search && !exactMatch){
+      var addItem = document.createElement('div');
+      addItem.className = 'dropdown-add-item';
+      addItem.innerHTML = '<span>➕ Crear nuevo proyecto:</span> <strong>"' + escapeHTML(filterText.trim()) + '"</strong>';
+      addItem.onclick = async function(e){
+        e.stopPropagation();
+        var val = filterText.trim();
+        await createProject(val);
+        selectProject(val);
+        toast('✓ Carpeta de proyecto "' + val + '" creada');
+      };
+      projDropdown.appendChild(addItem);
+    }
+
+    if(matched.length === 0 && !search){
+      var empty = document.createElement('div');
+      empty.className = 'dropdown-empty';
+      empty.textContent = 'No hay proyectos creados aún';
+      projDropdown.appendChild(empty);
+      return;
+    }
+
+    var currentValNorm = normalizeSearch(proj.value);
+    for(var i = 0; i < matched.length; i++){
+      var item = matched[i];
+      var count = counts[i] || 0;
+      var row = document.createElement('div');
+      row.className = 'dropdown-item' +
+        (normalizeSearch(item) === currentValNorm ? ' selected' : '') +
+        (count > 0 ? ' has-photos' : '');
+
+      var textSpan = document.createElement('span');
+      if(search){
+        var idx = normalizeSearch(item).indexOf(search);
+        var originalSub = item.substr(idx, search.length);
+        var before = item.substring(0, idx);
+        var after = item.substring(idx + search.length);
+        textSpan.innerHTML = escapeHTML(before) + '<mark>' + escapeHTML(originalSub) + '</mark>' + escapeHTML(after);
+      } else {
+        textSpan.textContent = item;
+      }
+      row.appendChild(textSpan);
+
+      if(count > 0){
+        var tag = document.createElement('span');
+        tag.className = 'photo-tag';
+        tag.textContent = '📁 ' + count + (count === 1 ? ' foto' : ' fotos');
+        row.appendChild(tag);
+      }
+
+      (function(val){
+        row.onclick = function(e){
+          e.stopPropagation();
+          selectProject(val);
+        };
+      })(item);
+
+      projDropdown.appendChild(row);
+    }
+  }
+
+  function selectProject(val){
+    proj.value = val;
+    projClear.style.display = val ? 'flex' : 'none';
+    closeProjDropdown();
+    try { localStorage.setItem('protopic_proj', val); } catch(e) {}
+    refresh();
+  }
+
+  var isOpeningProj = false;
+
+  async function openProjDropdown(searchVal){
+    if(isOpeningProj) return;
+    isOpeningProj = true;
+    closeDropdown();
+    await renderProjDropdown(searchVal !== undefined ? searchVal : proj.value);
+    projDropdown.classList.add('open');
+    isOpeningProj = false;
+  }
+
+  function closeProjDropdown(){
+    projDropdown.classList.remove('open');
+  }
+
+  proj.addEventListener('focus', function(){
+    openProjDropdown(proj.value);
+  });
+
+  proj.addEventListener('click', function(){
+    if(!projDropdown.classList.contains('open')){
+      openProjDropdown(proj.value);
+    }
+  });
+
+  proj.addEventListener('input', function(){
+    projClear.style.display = proj.value ? 'flex' : 'none';
+    renderProjDropdown(proj.value);
+    if(!projDropdown.classList.contains('open')){
+      projDropdown.classList.add('open');
+    }
+    refresh();
+  });
+
+  projToggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    proj.blur();
+    if(projDropdown.classList.contains('open')){
+      closeProjDropdown();
+    } else {
+      openProjDropdown('');
+    }
+  });
+
+  projClear.addEventListener('click', function(e){
+    e.stopPropagation();
+    proj.value = '';
+    projClear.style.display = 'none';
+    proj.blur();
+    openProjDropdown('');
+    refresh();
+  });
+
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('#proj-combobox')){
+      closeProjDropdown();
+    }
+  });
+
+  // GESTIÓN DE LA LISTA DE OPERACIONES (BASE + PERSONALIZADAS)
+  function getCustomOperations(){
+    try {
+      var saved = localStorage.getItem('protopic_custom_ops');
+      return saved ? JSON.parse(saved) : [];
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function saveCustomOperation(newOp){
+    var trimmed = newOp.trim().toUpperCase();
+    if(!trimmed) return;
+    var all = getAllOperations();
+    var normNew = normalizeSearch(trimmed);
+    var exists = all.some(function(item){ return normalizeSearch(item) === normNew; });
+    if(exists) return;
+
+    var custom = getCustomOperations();
+    custom.push(trimmed);
+    try {
+      localStorage.setItem('protopic_custom_ops', JSON.stringify(custom));
+    } catch(e) {}
+  }
+
+  function getAllOperations(){
+    var custom = getCustomOperations();
+    var set = {};
+    BASE_OPERATIONS.forEach(function(o){ set[o.toUpperCase()] = true; });
+    custom.forEach(function(o){ set[o.toUpperCase()] = true; });
+    var list = Object.keys(set);
+    list.sort(function(a, b){
+      return a.localeCompare(b, 'es', { sensitivity: 'base' });
+    });
+    return list;
+  }
+
+  // Mapa de operaciones con fotos tomadas en el proyecto actual
+  async function getPhotoCountsByOperation(){
+    var files = await listFiles();
+    var counts = {};
+    files.forEach(function(f){
+      var k = f.replace(/_\d+\.jpg$/i, '');
+      counts[k] = (counts[k] || 0) + 1;
+    });
+    return counts;
+  }
+
+  // RENDERIZADO DEL DESPLEGABLE DE OPERACIONES
+  async function renderDropdown(filterText){
+    var all = getAllOperations();
+    var search = normalizeSearch(filterText);
+    var matched = [];
+
+    if(!search){
+      matched = all;
+    } else {
+      matched = all.filter(function(item){
+        return normalizeSearch(item).indexOf(search) !== -1;
+      });
+    }
+
+    var countsMap = await getPhotoCountsByOperation();
+
+    opDropdown.innerHTML = '';
+
+    var head = document.createElement('div');
+    head.className = 'dropdown-header';
+    head.innerHTML = '<span>Operaciones disponibles</span><span>' + matched.length + ' de ' + all.length + '</span>';
+    opDropdown.appendChild(head);
+
+    var exactMatch = all.some(function(item){ return normalizeSearch(item) === search; });
+    if(search && !exactMatch){
+      var addItem = document.createElement('div');
+      addItem.className = 'dropdown-add-item';
+      addItem.innerHTML = '<span>➕ Añadir nueva:</span> <strong>"' + escapeHTML(filterText.trim().toUpperCase()) + '"</strong>';
+      addItem.onclick = function(e){
+        e.stopPropagation();
+        var val = filterText.trim().toUpperCase();
+        saveCustomOperation(val);
+        selectOperation(val);
+        toast('✓ Operación "' + val + '" añadida a la lista');
+      };
+      opDropdown.appendChild(addItem);
+    }
+
+    if(matched.length === 0 && !search){
+      var empty = document.createElement('div');
+      empty.className = 'dropdown-empty';
+      empty.textContent = 'No hay operaciones';
+      opDropdown.appendChild(empty);
+      return;
+    }
+
+    var currentValNorm = normalizeSearch(op.value);
+    matched.forEach(function(item){
+      var cleanKey = clean(item);
+      var photoCount = countsMap[cleanKey] || 0;
+      var hasPhotos = photoCount > 0;
+
+      var row = document.createElement('div');
+      row.className = 'dropdown-item' +
+        (normalizeSearch(item) === currentValNorm ? ' selected' : '') +
+        (hasPhotos ? ' has-photos' : '');
+
+      var textSpan = document.createElement('span');
+      if(search){
+        var idx = normalizeSearch(item).indexOf(search);
+        var originalSub = item.substr(idx, search.length);
+        var before = item.substring(0, idx);
+        var after = item.substring(idx + search.length);
+        textSpan.innerHTML = escapeHTML(before) + '<mark>' + escapeHTML(originalSub) + '</mark>' + escapeHTML(after);
+      } else {
+        textSpan.textContent = item;
+      }
+      row.appendChild(textSpan);
+
+      if(hasPhotos){
+        var tag = document.createElement('span');
+        tag.className = 'photo-tag';
+        tag.textContent = '📷 ' + photoCount + (photoCount === 1 ? ' foto' : ' fotos');
+        row.appendChild(tag);
+      }
+
+      row.onclick = function(e){
+        e.stopPropagation();
+        selectOperation(item);
+      };
+      opDropdown.appendChild(row);
+    });
+  }
+
+  function escapeHTML(s){
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function selectOperation(val){
+    op.value = val;
+    opClear.style.display = val ? 'flex' : 'none';
+    closeDropdown();
+    try { localStorage.setItem('protopic_op', val); } catch(e) {}
+    refresh();
+  }
+
+  async function openDropdown(){
+    closeProjDropdown(); // Cierra el de proyectos si estaba abierto
+    await renderDropdown(op.value);
+    opDropdown.classList.add('open');
+  }
+
+  function closeDropdown(){
+    opDropdown.classList.remove('open');
+  }
+
+  op.addEventListener('focus', function(){
+    openDropdown();
+  });
+
+  op.addEventListener('click', function(){
+    if(!opDropdown.classList.contains('open')){
+      openDropdown();
+    }
+  });
+
+  op.addEventListener('input', function(){
+    opClear.style.display = op.value ? 'flex' : 'none';
+    renderDropdown(op.value);
+    if(!opDropdown.classList.contains('open')){
+      opDropdown.classList.add('open');
+    }
+    refresh();
+  });
+
+  opToggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    op.blur();
+    if(opDropdown.classList.contains('open')){
+      closeDropdown();
+    } else {
+      closeProjDropdown();
+      renderDropdown('');
+      opDropdown.classList.add('open');
+    }
+  });
+
+  opClear.addEventListener('click', function(e){
+    e.stopPropagation();
+    op.value = '';
+    opClear.style.display = 'none';
+    op.blur();
+    renderDropdown('');
+    opDropdown.classList.add('open');
+    refresh();
+  });
+
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('#op-combobox')){
+      closeDropdown();
+    }
+  });
+
+  function dir(){
+    var p = clean(proj.value) || 'Sin_Proyecto';
+    return ROOT + '/' + p;
+  }
+
+  function ready(){
+    return !!(clean(proj.value) && clean(op.value));
+  }
+
+  async function listFiles(){
+    if(MediaScanner && typeof MediaScanner.listFiles === 'function'){
+      try {
+        var r = await MediaScanner.listFiles({ path: dir() });
+        return (r.files || []).map(function(f){ return f.name || f; })
+          .filter(function(n){ return /\.jpg$/i.test(n); }).sort();
+      } catch(e){
+        return [];
+      }
+    }
+    if(native){
+      try {
+        var r = await FS.readdir({ path: dir(), directory: STORAGE_DIR });
+        return r.files.map(function(f){ return f.name || f; })
+          .filter(function(n){ return /\.jpg$/i.test(n); }).sort();
+      } catch(e) {
+        return [];
+      }
+    }
+    var prefix = dir() + '/';
+    return Object.keys(memory)
+      .filter(function(k){ return k.indexOf(prefix) === 0; })
+      .map(function(k){ return k.slice(prefix.length); })
+      .sort();
+  }
+
+  async function readData(name){
+    if(MediaScanner && typeof MediaScanner.readFile === 'function'){
+      try {
+        var r = await MediaScanner.readFile({ path: dir() + '/' + name, encoding: 'base64' });
+        return 'data:image/jpeg;base64,' + r.data;
+      } catch(e){}
+    }
+    if(native){
+      try {
+        var r = await FS.readFile({ path: dir() + '/' + name, directory: STORAGE_DIR });
+        return 'data:image/jpeg;base64,' + r.data;
+      } catch(e) {
+        return '';
+      }
+    }
+    return memory[dir() + '/' + name] || '';
+  }
+
+  async function renameFile(from, to){
+    if(from === to) return;
+    if(MediaScanner && typeof MediaScanner.renameFile === 'function'){
+      await MediaScanner.renameFile({
+        from: dir() + '/' + from,
+        to: dir() + '/' + to
+      });
+      return;
+    }
+    if(native){
+      await FS.rename({
+        from: dir() + '/' + from,
+        to: dir() + '/' + to,
+        directory: STORAGE_DIR,
+        toDirectory: STORAGE_DIR
+      });
+    } else {
+      var d = dir() + '/';
+      memory[d + to] = memory[d + from];
+      delete memory[d + from];
+    }
+  }
+
+  async function deleteFile(name){
+    if(MediaScanner && typeof MediaScanner.deleteFile === 'function'){
+      await MediaScanner.deleteFile({ path: dir() + '/' + name });
+      return;
+    }
+    if(native){
+      await FS.deleteFile({ path: dir() + '/' + name, directory: STORAGE_DIR });
+    } else {
+      delete memory[dir() + '/' + name];
+    }
+  }
+
+  async function nextName(){
+    var pre = clean(op.value);
+    if(!pre) return '-';
+    var re = new RegExp('^' + pre + '_(\\d+)\\.jpg$', 'i');
+    var maxNum = 0;
+    (await listFiles()).forEach(function(f){
+      var m = f.match(re);
+      if(m) maxNum = Math.max(maxNum, parseInt(m[1], 10));
+    });
+    return pre + '_' + pad(maxNum + 1) + '.jpg';
+  }
+
+  // Renombra de manera segura y atómica sin riesgo de pérdida de archivos
+  async function applyOrder(orderNames){
+    if(busy) return;
+    if(!orderNames || !Array.isArray(orderNames) || orderNames.length <= 1) return;
+
+    // Validación estricta de integridad
+    for(var k = 0; k < orderNames.length; k++){
+      if(!orderNames[k] || typeof orderNames[k] !== 'string'){
+        console.error('applyOrder cancelado: lista con valores no válidos', orderNames);
+        return;
+      }
+    }
+    var uniqueCheck = new Set(orderNames);
+    if(uniqueCheck.size !== orderNames.length){
+      console.error('applyOrder cancelado: lista con nombres duplicados', orderNames);
+      return;
+    }
+
+    var pre = clean(op.value);
+    var hasChanges = false;
+    for(var idx = 0; idx < orderNames.length; idx++){
+      if(orderNames[idx] !== (pre + '_' + pad(idx + 1) + '.jpg')){
+        hasChanges = true;
+        break;
+      }
+    }
+    if(!hasChanges) return;
+
+    busy = true;
+    toast('Actualizando orden y renumerando...');
+    try {
+      if(MediaScanner && typeof MediaScanner.reorderFiles === 'function'){
+        await MediaScanner.reorderFiles({
+          dir: dir(),
+          prefix: pre,
+          files: orderNames
+        });
+        toast('✓ Secuencia y archivos renumerados');
+      } else {
+        // Fallback paso a paso con nombres temporales seguros que terminan en .jpg
+        var changes = [];
+        orderNames.forEach(function(oldName, idx){
+          var newName = pre + '_' + pad(idx + 1) + '.jpg';
+          if(newName !== oldName){
+            changes.push({
+              oldName: oldName,
+              tmpName: '_ptmp_' + Date.now() + '_' + idx + '.jpg',
+              newName: newName
+            });
+          }
+        });
+        for(var i = 0; i < changes.length; i++){
+          await renameFile(changes[i].oldName, changes[i].tmpName);
+        }
+        for(var j = 0; j < changes.length; j++){
+          await renameFile(changes[j].tmpName, changes[j].newName);
+        }
+        toast('✓ Secuencia y archivos renumerados');
+        triggerMediaScan(dir());
+      }
+    } catch(err) {
+      toast('Error al renumerar: ' + (err.message || err));
+      console.error('Error al renumerar:', err);
+    } finally {
+      busy = false;
+      await refresh();
+    }
+  }
+
+  async function shiftPosition(index, offset){
+    if(busy) return;
+    var targetIndex = index + offset;
+    if(targetIndex < 0 || targetIndex >= currentFilesList.length) return;
+    var newOrder = currentFilesList.slice();
+    var item = newOrder.splice(index, 1)[0];
+    newOrder.splice(targetIndex, 0, item);
+    await applyOrder(newOrder);
+  }
+
+  // DRAG & DROP ROBUSTO BASADO EN NOMBRES DE ARCHIVOS (SIN COLISIONES)
+  var draggedName = null;
+  var touchJustFinished = false;
+
+  function attachElementDragAndDrop(element, index, selectorClass){
+    element.draggable = true;
+
+    element.addEventListener('dragstart', function(e){
+      if(busy){ e.preventDefault(); return; }
+      draggedName = element.dataset.name;
+      element.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      if(navigator.vibrate) navigator.vibrate(25);
+    });
+
+    element.addEventListener('dragend', function(){
+      element.classList.remove('dragging');
+      document.querySelectorAll('.' + selectorClass).forEach(function(c){ c.classList.remove('drag-over'); });
+    });
+
+    element.addEventListener('dragover', function(e){
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      element.classList.add('drag-over');
+    });
+
+    element.addEventListener('dragleave', function(){
+      element.classList.remove('drag-over');
+    });
+
+    element.addEventListener('drop', function(e){
+      e.preventDefault();
+      element.classList.remove('drag-over');
+      if(touchJustFinished || !draggedName) return;
+
+      var fromName = draggedName;
+      var toName = element.dataset.name;
+      draggedName = null;
+      if(!fromName || !toName || fromName === toName) return;
+
+      var fromIdx = currentFilesList.indexOf(fromName);
+      var toIdx = currentFilesList.indexOf(toName);
+      if(fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return;
+
+      var newOrder = currentFilesList.slice();
+      var moved = newOrder.splice(fromIdx, 1)[0];
+      newOrder.splice(toIdx, 0, moved);
+      applyOrder(newOrder);
+    });
+
+    var touchData = null;
+    var handle = element.querySelector('.step-header') || element;
+
+    handle.addEventListener('touchstart', function(e){
+      if(busy || e.touches.length !== 1) return;
+      var t = e.touches[0];
+      touchData = {
+        startX: t.clientX,
+        startY: t.clientY,
+        curX: t.clientX,
+        curY: t.clientY,
+        fromName: element.dataset.name,
+        isDragging: false,
+        timer: setTimeout(function(){
+          if(!touchData) return;
+          touchData.isDragging = true;
+          element.classList.add('dragging');
+          if(navigator.vibrate) navigator.vibrate(30);
+        }, 180)
+      };
+    }, { passive: true });
+
+    handle.addEventListener('touchmove', function(e){
+      if(!touchData) return;
+      var t = e.touches[0];
+      touchData.curX = t.clientX;
+      touchData.curY = t.clientY;
+
+      if(!touchData.isDragging){
+        if(Math.hypot(t.clientX - touchData.startX, t.clientY - touchData.startY) > 10){
+          clearTimeout(touchData.timer);
+          touchData = null;
+        }
+        return;
+      }
+      e.preventDefault();
+
+      var found = document.elementFromPoint(touchData.curX, touchData.curY);
+      var targetElem = found ? found.closest('.' + selectorClass) : null;
+      document.querySelectorAll('.' + selectorClass).forEach(function(c){
+        if(c === targetElem && c !== element) c.classList.add('drag-over');
+        else c.classList.remove('drag-over');
+      });
+    }, { passive: false });
+
+    function onTouchEnd(){
+      if(!touchData) return;
+      clearTimeout(touchData.timer);
+      var wasDrag = touchData.isDragging;
+      var curX = touchData.curX, curY = touchData.curY;
+      var fromName = touchData.fromName;
+      touchData = null;
+      element.classList.remove('dragging');
+      document.querySelectorAll('.' + selectorClass).forEach(function(c){ c.classList.remove('drag-over'); });
+
+      if(!wasDrag || !fromName) return;
+
+      touchJustFinished = true;
+      setTimeout(function(){ touchJustFinished = false; }, 350);
+
+      var found = document.elementFromPoint(curX, curY);
+      var targetElem = found ? found.closest('.' + selectorClass) : null;
+      if(!targetElem || targetElem === element) return;
+
+      var toName = targetElem.dataset.name;
+      if(!toName || fromName === toName) return;
+
+      var fromIdx = currentFilesList.indexOf(fromName);
+      var toIdx = currentFilesList.indexOf(toName);
+      if(fromIdx === -1 || toIdx === -1 || fromIdx === toIdx) return;
+
+      var newOrder = currentFilesList.slice();
+      var moved = newOrder.splice(fromIdx, 1)[0];
+      newOrder.splice(toIdx, 0, moved);
+      applyOrder(newOrder);
+    }
+
+    handle.addEventListener('touchend', onTouchEnd);
+    handle.addEventListener('touchcancel', onTouchEnd);
+  }
+
+  // MODO DE REORDENACIÓN EN 2 TOQUES (SELECCIONAR Y COLOCAR)
+  var selectedMoveFile = null;
+
+  function cancelMoveMode(){
+    selectedMoveFile = null;
+    var banner = $('carousel-move-banner');
+    if(banner) banner.style.display = 'none';
+    if(currentFilesList && currentFilesList.length && currentView === 'carousel'){
+      renderCarousel(currentFilesList);
+    }
+  }
+
+  function startMoveMode(fileName){
+    selectedMoveFile = fileName;
+    var banner = $('carousel-move-banner');
+    var bannerTitle = $('move-banner-title');
+    var idx = currentFilesList.indexOf(fileName);
+    if(banner && bannerTitle){
+      bannerTitle.innerHTML = 'Moviendo <strong>Paso ' + pad(idx + 1) + '</strong> (' + fileName + ')';
+      banner.style.display = 'flex';
+    }
+    if(navigator.vibrate) navigator.vibrate(30);
+    renderCarousel(currentFilesList);
+    toast('📌 Paso ' + pad(idx + 1) + ' marcado. Desliza y pulsa "Colocar aquí".');
+  }
+
+  async function executeTwoTapMove(fromName, toName, insertAfter){
+    if(busy || !fromName || !toName || fromName === toName){
+      cancelMoveMode();
+      return;
+    }
+    var fromIdx = currentFilesList.indexOf(fromName);
+    var toIdx = currentFilesList.indexOf(toName);
+    if(fromIdx === -1 || toIdx === -1){
+      cancelMoveMode();
+      return;
+    }
+
+    var newOrder = currentFilesList.slice();
+    var moved = newOrder.splice(fromIdx, 1)[0];
+    var destIdx = newOrder.indexOf(toName);
+    if(insertAfter) destIdx += 1;
+    newOrder.splice(destIdx, 0, moved);
+
+    selectedMoveFile = null;
+    var banner = $('carousel-move-banner');
+    if(banner) banner.style.display = 'none';
+
+    await applyOrder(newOrder);
+
+    // Desplazar suavemente hasta la nueva posición del archivo movido
+    setTimeout(function(){
+      if(currentView === 'carousel'){
+        var cards = carousel.querySelectorAll('.step-card');
+        cards.forEach(function(c){
+          if(c.dataset.name === fromName){
+            c.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            c.classList.add('just-moved');
+            setTimeout(function(){ c.classList.remove('just-moved'); }, 2000);
+          }
+        });
+      }
+    }, 250);
+  }
+
+  var cancelMoveBtn = $('cancel-move-btn');
+  if(cancelMoveBtn){
+    cancelMoveBtn.onclick = function(){
+      cancelMoveMode();
+    };
+  }
+
+  async function renderCarousel(files){
+    carousel.innerHTML = '';
+    var isMovingMode = !!(selectedMoveFile && files.indexOf(selectedMoveFile) !== -1);
+    var banner = $('carousel-move-banner');
+    if(banner) banner.style.display = isMovingMode ? 'flex' : 'none';
+
+    for(var i = 0; i < files.length; i++){
+      var name = files[i];
+      var stepNum = i + 1;
+      var isThisCardMoving = (selectedMoveFile === name);
+
+      var card = document.createElement('div');
+      card.className = 'step-card' + (isThisCardMoving ? ' is-being-moved' : '');
+      card.dataset.index = i;
+      card.dataset.name = name;
+
+      var header = document.createElement('div');
+      header.className = 'step-header';
+
+      var badge = document.createElement('span');
+      badge.className = 'step-badge';
+      badge.textContent = 'Paso ' + pad(stepNum);
+      header.appendChild(badge);
+
+      var headerRight = document.createElement('div');
+      headerRight.style.display = 'flex';
+      headerRight.style.alignItems = 'center';
+      headerRight.style.gap = '6px';
+
+      if(!isMovingMode){
+        var pinBtn = document.createElement('button');
+        pinBtn.type = 'button';
+        pinBtn.className = 'step-pin-btn';
+        pinBtn.innerHTML = '📌 Mover';
+        pinBtn.title = 'Mover este paso a otra posición en 2 toques';
+        (function(fname){
+          pinBtn.onclick = function(e){
+            e.stopPropagation();
+            startMoveMode(fname);
+          };
+        })(name);
+        headerRight.appendChild(pinBtn);
+      }
+
+      var grip = document.createElement('span');
+      grip.className = 'step-grip';
+      grip.textContent = '⋮⋮';
+      headerRight.appendChild(grip);
+
+      header.appendChild(headerRight);
+
+      var imgBox = document.createElement('div');
+      imgBox.className = 'step-img-box';
+      var img = document.createElement('img');
+      img.alt = 'Paso ' + stepNum;
+      img.src = await readData(name);
+      var overlay = document.createElement('div');
+      overlay.className = 'step-img-overlay';
+      overlay.innerHTML = '🔍 Tocar para ampliar';
+      imgBox.appendChild(img);
+      imgBox.appendChild(overlay);
+
+      (function(n, s, num){
+        imgBox.onclick = function(){
+          if(selectedMoveFile) return;
+          view(n, s, num);
+        };
+      })(name, img.src, stepNum);
+
+      var meta = document.createElement('div');
+      meta.className = 'step-meta';
+      meta.textContent = name;
+
+      var actions = document.createElement('div');
+      actions.className = 'step-actions';
+
+      if(isThisCardMoving){
+        var btnCancel = document.createElement('button');
+        btnCancel.type = 'button';
+        btnCancel.className = 'btn-cancel-move-card';
+        btnCancel.innerHTML = '✖ Cancelar movimiento';
+        btnCancel.onclick = function(e){
+          e.stopPropagation();
+          cancelMoveMode();
+        };
+        actions.appendChild(btnCancel);
+      } else if(isMovingMode){
+        var btnPlaceBefore = document.createElement('button');
+        btnPlaceBefore.type = 'button';
+        btnPlaceBefore.className = 'btn-place-target';
+        btnPlaceBefore.innerHTML = '⇤ Colocar antes';
+        btnPlaceBefore.title = 'Colocar la foto seleccionada justo antes del Paso ' + pad(stepNum);
+        (function(targetName){
+          btnPlaceBefore.onclick = async function(e){
+            e.stopPropagation();
+            await executeTwoTapMove(selectedMoveFile, targetName, false);
+          };
+        })(name);
+
+        var btnPlaceAfter = document.createElement('button');
+        btnPlaceAfter.type = 'button';
+        btnPlaceAfter.className = 'btn-place-target';
+        btnPlaceAfter.innerHTML = 'Colocar después ⇥';
+        btnPlaceAfter.title = 'Colocar la foto seleccionada justo después del Paso ' + pad(stepNum);
+        (function(targetName){
+          btnPlaceAfter.onclick = async function(e){
+            e.stopPropagation();
+            await executeTwoTapMove(selectedMoveFile, targetName, true);
+          };
+        })(name);
+
+        actions.appendChild(btnPlaceBefore);
+        actions.appendChild(btnPlaceAfter);
+      } else {
+        var btnLeft = document.createElement('button');
+        btnLeft.className = 'btn-step-nav';
+        btnLeft.innerHTML = '◀';
+        btnLeft.title = 'Mover este paso 1 posición antes';
+        btnLeft.disabled = (i === 0);
+        (function(idx){ btnLeft.onclick = function(e){ e.stopPropagation(); shiftPosition(idx, -1); }; })(i);
+
+        var btnMove = document.createElement('button');
+        btnMove.className = 'btn-action-move';
+        btnMove.innerHTML = '📌 Mover paso';
+        btnMove.title = 'Mover esta foto a cualquier otra posición en 2 toques';
+        (function(fname){
+          btnMove.onclick = function(e){
+            e.stopPropagation();
+            startMoveMode(fname);
+          };
+        })(name);
+
+        var btnRight = document.createElement('button');
+        btnRight.className = 'btn-step-nav';
+        btnRight.innerHTML = '▶';
+        btnRight.title = 'Mover este paso 1 posición después';
+        btnRight.disabled = (i === files.length - 1);
+        (function(idx){ btnRight.onclick = function(e){ e.stopPropagation(); shiftPosition(idx, +1); }; })(i);
+
+        actions.appendChild(btnLeft);
+        actions.appendChild(btnMove);
+        actions.appendChild(btnRight);
+      }
+
+      card.appendChild(header);
+      card.appendChild(imgBox);
+      card.appendChild(meta);
+      card.appendChild(actions);
+
+      if(!isMovingMode){
+        attachElementDragAndDrop(card, i, 'step-card');
+      }
+      carousel.appendChild(card);
+    }
+  }
+
+  async function renderGrid(files){
+    grid.innerHTML = '';
+    for(var i = 0; i < files.length; i++){
+      var name = files[i];
+      var stepNum = i + 1;
+      var item = document.createElement('div');
+      item.className = 'grid-item';
+      item.dataset.index = i;
+      item.dataset.name = name;
+
+      var img = document.createElement('img');
+      img.src = await readData(name);
+      var badge = document.createElement('div');
+      badge.className = 'badge';
+      badge.textContent = 'Paso ' + pad(stepNum);
+
+      var grip = document.createElement('div');
+      grip.className = 'grip-hint';
+      grip.textContent = '⋮⋮';
+
+      var label = document.createElement('div');
+      label.className = 'name';
+      label.textContent = name;
+
+      item.appendChild(img);
+      item.appendChild(badge);
+      item.appendChild(grip);
+      item.appendChild(label);
+
+      (function(n, s, num){
+        item.onclick = function(e){
+          if(item.classList.contains('dragging')) return;
+          view(n, s, num);
+        };
+      })(name, img.src, stepNum);
+
+      attachElementDragAndDrop(item, i, 'grid-item');
+      grid.appendChild(item);
+    }
+  }
+
+  async function refresh(){
+    var isReady = ready();
+    shot.disabled = !isReady;
+
+    // Resaltar en azul con texto blanco si están seleccionados
+    if(clean(proj.value)){
+      proj.classList.add('is-selected');
+      proj.parentElement.classList.add('is-selected');
+    } else {
+      proj.classList.remove('is-selected');
+      proj.parentElement.classList.remove('is-selected');
+    }
+
+    if(clean(op.value)){
+      op.classList.add('is-selected');
+      op.parentElement.classList.add('is-selected');
+    } else {
+      op.classList.remove('is-selected');
+      op.parentElement.classList.remove('is-selected');
+    }
+
+    if(!isReady){
+      selectedMoveFile = null;
+      var banner = $('carousel-move-banner');
+      if(banner) banner.style.display = 'none';
+      carousel.innerHTML = '';
+      grid.innerHTML = '';
+      emptyState.style.display = 'none';
+      itemCountEl.textContent = '0 fotos';
+      await updateNotesUI();
+      return;
+    }
+
+    var reOp = new RegExp('^' + clean(op.value) + '_\\d+\\.jpg$', 'i');
+    currentFilesList = (await listFiles()).filter(function(f){ return reOp.test(f); });
+
+    var totalFotos = currentFilesList.length;
+    itemCountEl.textContent = totalFotos + (totalFotos === 1 ? ' foto' : ' fotos');
+
+    if(selectedMoveFile && currentFilesList.indexOf(selectedMoveFile) === -1){
+      selectedMoveFile = null;
+      var banner = $('carousel-move-banner');
+      if(banner) banner.style.display = 'none';
+    }
+
+    if(totalFotos === 0){
+      selectedMoveFile = null;
+      var banner = $('carousel-move-banner');
+      if(banner) banner.style.display = 'none';
+      emptyState.style.display = 'block';
+      carousel.innerHTML = '';
+      grid.innerHTML = '';
+    } else {
+      emptyState.style.display = 'none';
+      if(currentView === 'carousel'){
+        await renderCarousel(currentFilesList);
+      } else {
+        await renderGrid(currentFilesList);
+      }
+    }
+    await updateNotesUI();
+    triggerMediaScan(dir());
+  }
+
+  // SONIDO DE OBTURADOR DE CÁMARA (WEB AUDIO API)
+  var audioCtx = null;
+  function playShutterSound(){
+    try {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if(!AudioCtx) return;
+      if(!audioCtx) audioCtx = new AudioCtx();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+
+      var now = audioCtx.currentTime;
+
+      // 1. Clic inicial: apertura de cortinilla
+      playClickPulse(now, 1850, 0.035, 0.9);
+
+      // 2. Clic final: cierre de obturador mecánico (55ms después)
+      playClickPulse(now + 0.055, 980, 0.050, 0.95);
+    } catch(e) {}
+  }
+
+  function playClickPulse(startTime, freq, duration, volume){
+    try {
+      var sampleRate = audioCtx.sampleRate;
+      var bufferSize = Math.max(1, Math.floor(sampleRate * duration));
+      var buffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
+      var data = buffer.getChannelData(0);
+      for(var i = 0; i < bufferSize; i++){
+        data[i] = (Math.random() * 2 - 1);
+      }
+
+      var noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      var filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(freq, startTime);
+      filter.Q.setValueAtTime(3.2, startTime);
+
+      var gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(volume, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      noise.start(startTime);
+      noise.stop(startTime + duration);
+    } catch(err){}
+  }
+
+  // PINCH-TO-ZOOM Y PAN EN EL VISOR
+  var vimg = $('vimg');
+  var vstage = vimg.parentElement;
+  var zoomScale = 1, zoomX = 0, zoomY = 0;
+  var initialDist = 0, startScale = 1;
+  var isPanning = false, startPanX = 0, startPanY = 0;
+  var lastTap = 0;
+
+  function updateZoomUI(){
+    if(zoomScale <= 1.02){
+      zoomScale = 1;
+      zoomX = 0;
+      zoomY = 0;
+      vimg.style.transform = 'none';
+      return;
+    }
+    vimg.style.transform = 'translate(' + zoomX + 'px, ' + zoomY + 'px) scale(' + zoomScale + ')';
+  }
+
+  function resetZoom(){
+    zoomScale = 1;
+    zoomX = 0;
+    zoomY = 0;
+    updateZoomUI();
+  }
+
+  vstage.addEventListener('touchstart', function(e){
+    if(e.touches.length === 2){
+      isPanning = false;
+      initialDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      startScale = zoomScale;
+    } else if(e.touches.length === 1){
+      var now = Date.now();
+      if(now - lastTap < 300){
+        if(zoomScale > 1.2){
+          resetZoom();
+        } else {
+          zoomScale = 2.6;
+          zoomX = 0;
+          zoomY = 0;
+          updateZoomUI();
+        }
+        lastTap = 0;
+        return;
+      }
+      lastTap = now;
+
+      if(zoomScale > 1){
+        isPanning = true;
+        startPanX = e.touches[0].clientX - zoomX;
+        startPanY = e.touches[0].clientY - zoomY;
+      }
+    }
+  }, { passive: false });
+
+  vstage.addEventListener('touchmove', function(e){
+    if(e.touches.length === 2 && initialDist > 0){
+      e.preventDefault();
+      var curDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      zoomScale = Math.min(Math.max(1, startScale * (curDist / initialDist)), 5.5);
+      updateZoomUI();
+    } else if(e.touches.length === 1 && isPanning && zoomScale > 1){
+      e.preventDefault();
+      zoomX = e.touches[0].clientX - startPanX;
+      zoomY = e.touches[0].clientY - startPanY;
+      updateZoomUI();
+    }
+  }, { passive: false });
+
+  function endZoomTouch(){
+    initialDist = 0;
+    isPanning = false;
+    if(zoomScale < 1.05){
+      resetZoom();
+    }
+  }
+  vstage.addEventListener('touchend', endZoomTouch);
+  vstage.addEventListener('touchcancel', endZoomTouch);
+
+  function view(name, src, stepNum){
+    resetZoom();
+    currentFile = name;
+    $('vimg').src = src;
+    $('vname').textContent = name;
+    var idx = currentFilesList.indexOf(name);
+    var num = (idx >= 0) ? (idx + 1) : (stepNum || 1);
+    $('vstep-title').textContent = 'Paso ' + pad(num) + ' de ' + currentFilesList.length;
+    $('viewer').className = 'on';
+  }
+
+  function toDataURL(file){
+    return new Promise(function(res, rej){
+      var r = new FileReader();
+      r.onload = function(){ res(r.result); };
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+  }
+
+  // Botón obturador hacer foto
+  shot.onclick = function(){
+    playShutterSound();
+    if(navigator.vibrate) navigator.vibrate(35);
+    cam.value = '';
+    cam.click();
+  };
+
+  cam.onchange = async function(){
+    var f = cam.files[0];
+    if(!f) return;
+    try {
+      toast('Guardando imagen...');
+      var name = await nextName();
+      var dataUrl = await toDataURL(f);
+      var b64 = dataUrl.split(',')[1];
+
+      if(MediaScanner && typeof MediaScanner.writeFile === 'function'){
+        await MediaScanner.writeFile({
+          path: dir() + '/' + name,
+          data: b64,
+          encoding: 'base64'
+        });
+      } else if(native){
+        await FS.writeFile({
+          path: dir() + '/' + name,
+          data: b64,
+          directory: STORAGE_DIR,
+          recursive: true
+        });
+        triggerMediaScan(dir() + '/' + name);
+      } else {
+        memory[dir() + '/' + name] = dataUrl;
+      }
+
+      await refresh();
+      var idx = currentFilesList.indexOf(name);
+      var stepNum = (idx >= 0 ? idx + 1 : currentFilesList.length);
+      toast('✓ Foto guardada en el Paso ' + pad(stepNum));
+
+      // Desplazar suavemente el carrusel hasta la nueva foto
+      setTimeout(function(){
+        if(currentView === 'carousel' && carousel.lastElementChild){
+          carousel.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' });
+        }
+      }, 100);
+    } catch(err) {
+      toast('Error al guardar: ' + (err.message || err));
+    }
+  };
+
+  // Visor: Foto Correcta (confirmar)
+  $('vok').onclick = $('vclose').onclick = function(){
+    resetZoom();
+    $('viewer').className = '';
+    currentFile = null;
+  };
+
+  // Visor: Borrar foto y renumerar automáticamente las restantes
+  $('vdel').onclick = async function(){
+    if(!currentFile || busy) return;
+    if(!confirm('¿Eliminar la foto "' + currentFile + '" de la secuencia?')) return;
+    
+    var fileToDelete = currentFile;
+    currentFile = null;
+    $('viewer').className = '';
+    busy = true;
+    try {
+      await deleteFile(fileToDelete);
+      triggerMediaScan(dir());
+      toast('Foto eliminada');
+
+      var reOp = new RegExp('^' + clean(op.value) + '_\\d+\\.jpg$', 'i');
+      var remaining = (await listFiles()).filter(function(f){
+        return reOp.test(f) && f !== fileToDelete;
+      });
+      busy = false;
+      await applyOrder(remaining);
+    } catch(err) {
+      busy = false;
+      toast('No se pudo borrar: ' + (err.message || err));
+      await refresh();
+    }
+  };
+
+  // LISTAR ARCHIVOS DE CUALQUIER PROYECTO
+  async function listFilesInProject(projectName){
+    var pClean = clean(projectName);
+    if(!pClean) return [];
+    var files = await nativeListFiles(ROOT + '/' + pClean);
+    if(files !== null){
+      return files.map(function(f){ return (f && f.name) ? f.name : f; })
+        .filter(function(n){ return /\.jpg$/i.test(n); }).sort();
+    }
+    var prefix = ROOT + '/' + pClean + '/';
+    return Object.keys(memory)
+      .filter(function(k){ return k.indexOf(prefix) === 0 && /\.jpg$/i.test(k); })
+      .map(function(k){ return k.slice(prefix.length); })
+      .sort();
+  }
+
+  async function getPhotoCountsByOperationInProject(projectName){
+    var files = await listFilesInProject(projectName);
+    var counts = {};
+    files.forEach(function(f){
+      var k = f.replace(/_\d+\.jpg$/i, '');
+      counts[k] = (counts[k] || 0) + 1;
+    });
+    return counts;
+  }
+
+  function getTargetProject(){
+    if(!mprojSelect) return proj.value;
+    if(mprojSelect.value === '__NEW__'){
+      return mprojNew.value.trim();
+    }
+    return mprojSelect.value;
+  }
+
+  // MOVER FOTO A OTRO PROYECTO U OPERACIÓN
+  async function moveTo(destProjectName, newPrefix){
+    var cleanDestProj = clean(destProjectName);
+    var cleanDestOp = clean(newPrefix);
+    var srcProj = clean(proj.value);
+    var srcOp = clean(op.value);
+
+    if(!cleanDestProj){
+      toast('Especifica el proyecto de destino');
+      return;
+    }
+    if(!cleanDestOp){
+      toast('Especifica la operación de destino');
+      return;
+    }
+    if(!currentFile || busy) return;
+
+    // Si es exactamente el mismo proyecto y la misma operación, no hacer nada
+    if(cleanDestProj === srcProj && cleanDestOp === srcOp){
+      moverModal.className = '';
+      return;
+    }
+    
+    var fileMoved = currentFile;
+    currentFile = null;
+    moverModal.className = '';
+    $('viewer').className = '';
+    busy = true;
+
+    try {
+      await createProject(destProjectName);
+      saveCustomOperation(newPrefix);
+
+      var destDir = ROOT + '/' + cleanDestProj;
+      if(MediaScanner && typeof MediaScanner.mkdir === 'function'){
+        try { await MediaScanner.mkdir({ path: destDir }); } catch(e){}
+      } else if(native){
+        try {
+          await FS.mkdir({ path: destDir, directory: STORAGE_DIR, recursive: true });
+        } catch(e){}
+      }
+
+      // Siguiente número secuencial en el proyecto y operación destino
+      var destFiles = await listFilesInProject(cleanDestProj);
+      var re = new RegExp('^' + cleanDestOp + '_(\\d+)\\.jpg$', 'i');
+      var maxN = 0;
+      destFiles.forEach(function(f){
+        var m = f.match(re);
+        if(m) maxN = Math.max(maxN, parseInt(m[1], 10));
+      });
+      var newFileName = cleanDestOp + '_' + pad(maxN + 1) + '.jpg';
+
+      if(MediaScanner && typeof MediaScanner.renameFile === 'function'){
+        await MediaScanner.renameFile({
+          from: ROOT + '/' + srcProj + '/' + fileMoved,
+          to: ROOT + '/' + cleanDestProj + '/' + newFileName
+        });
+      } else if(native){
+        await FS.rename({
+          from: ROOT + '/' + srcProj + '/' + fileMoved,
+          to: ROOT + '/' + cleanDestProj + '/' + newFileName,
+          directory: STORAGE_DIR,
+          toDirectory: STORAGE_DIR
+        });
+      } else {
+        var fromKey = ROOT + '/' + srcProj + '/' + fileMoved;
+        var toKey = ROOT + '/' + cleanDestProj + '/' + newFileName;
+        memory[toKey] = memory[fromKey];
+        delete memory[fromKey];
+      }
+
+      var destLabel = (cleanDestProj !== srcProj ? (destProjectName + ' → ') : '') + newPrefix.trim().toUpperCase();
+      toast('✓ Foto movida a: ' + destLabel);
+
+      // Renumerar las que quedaron en el proyecto y operación de origen para cerrar el hueco
+      var reSrc = new RegExp('^' + srcOp + '_\\d+\\.jpg$', 'i');
+      var remainingInSrc = (await listFiles()).filter(function(f){
+        return reSrc.test(f) && f !== fileMoved;
+      });
+      busy = false;
+      await applyOrder(remainingInSrc);
+    } catch(e) {
+      busy = false;
+      toast('No se pudo mover: ' + (e.message || e));
+      await refresh();
+    }
+  }
+
+  // RENDERIZADO DEL SELECTOR DE OPERACIONES DENTRO DEL MODAL MOVER
+  async function renderMoverList(filterText){
+    var all = getAllOperations();
+    var targetProj = getTargetProject();
+    var isSameProject = (clean(targetProj) === clean(proj.value));
+    var srcClean = clean(op.value);
+    var search = normalizeSearch(filterText);
+    var countsMap = await getPhotoCountsByOperationInProject(targetProj);
+
+    mlist.innerHTML = '';
+
+    var filtered = all.filter(function(item){
+      // Si es el mismo proyecto, excluir la operación actual
+      if(isSameProject && clean(item) === srcClean) return false;
+      if(!search) return true;
+      return normalizeSearch(item).indexOf(search) !== -1;
+    });
+
+    var exactMatch = all.some(function(item){ return normalizeSearch(item) === search; });
+    if(search && !exactMatch){
+      var createBtn = document.createElement('div');
+      createBtn.className = 'mover-create-item';
+      createBtn.innerHTML = '<span>➕ Crear y mover a nueva operación:</span> <strong>"' + escapeHTML(filterText.trim().toUpperCase()) + '"</strong>';
+      createBtn.onclick = function(){
+        var p = getTargetProject();
+        if(!clean(p)){
+          toast('Escribe el nombre del proyecto de destino');
+          mprojNew.focus();
+          return;
+        }
+        moveTo(p, filterText.trim().toUpperCase());
+      };
+      mlist.appendChild(createBtn);
+    }
+
+    if(filtered.length === 0 && !search){
+      var empty = document.createElement('div');
+      empty.className = 'mover-empty';
+      empty.textContent = 'No hay operaciones disponibles';
+      mlist.appendChild(empty);
+      return;
+    }
+
+    filtered.forEach(function(item){
+      var cleanKey = clean(item);
+      var photoCount = countsMap[cleanKey] || 0;
+      var hasPhotos = photoCount > 0;
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mover-item' + (hasPhotos ? ' has-photos' : '');
+
+      var textSpan = document.createElement('span');
+      if(search){
+        var idx = normalizeSearch(item).indexOf(search);
+        var originalSub = item.substr(idx, search.length);
+        var before = item.substring(0, idx);
+        var after = item.substring(idx + search.length);
+        textSpan.innerHTML = escapeHTML(before) + '<mark>' + escapeHTML(originalSub) + '</mark>' + escapeHTML(after);
+      } else {
+        textSpan.textContent = item;
+      }
+      btn.appendChild(textSpan);
+
+      if(hasPhotos){
+        var tag = document.createElement('span');
+        tag.className = 'photo-tag';
+        tag.textContent = '📷 ' + photoCount + (photoCount === 1 ? ' foto' : ' fotos');
+        row_action = tag;
+        btn.appendChild(tag);
+      }
+
+      btn.onclick = function(){
+        var p = getTargetProject();
+        if(!clean(p)){
+          toast('Escribe el nombre del proyecto de destino');
+          mprojNew.focus();
+          return;
+        }
+        moveTo(p, item);
+      };
+      mlist.appendChild(btn);
+    });
+  }
+
+  // Abrir modal mover
+  $('vmove').onclick = async function(){
+    msearch.value = '';
+    mclear.style.display = 'none';
+
+    // Rellenar proyectos en el select de destino
+    var projectsList = await listProjects();
+    var currentProjVal = proj.value.trim();
+    mprojSelect.innerHTML = '';
+
+    // Si el proyecto actual no estaba en la lista, incluirlo
+    if(currentProjVal && !projectsList.some(function(p){ return clean(p) === clean(currentProjVal); })){
+      projectsList.unshift(currentProjVal);
+    }
+
+    projectsList.forEach(function(p){
+      var opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p + (clean(p) === clean(currentProjVal) ? ' (proyecto actual)' : '');
+      if(clean(p) === clean(currentProjVal)) opt.selected = true;
+      mprojSelect.appendChild(opt);
+    });
+
+    var optNew = document.createElement('option');
+    optNew.value = '__NEW__';
+    optNew.textContent = '➕ Crear nuevo proyecto...';
+    mprojSelect.appendChild(optNew);
+
+    mprojNew.style.display = 'none';
+    mprojNew.value = '';
+
+    await renderMoverList('');
+    moverModal.className = 'on';
+  };
+
+  mprojSelect.addEventListener('change', function(){
+    if(mprojSelect.value === '__NEW__'){
+      mprojNew.style.display = 'block';
+      mprojNew.value = '';
+      mprojNew.focus();
+    } else {
+      mprojNew.style.display = 'none';
+    }
+    renderMoverList(msearch.value);
+  });
+
+  mprojNew.addEventListener('input', function(){
+    renderMoverList(msearch.value);
+  });
+
+  msearch.addEventListener('input', function(){
+    mclear.style.display = msearch.value ? 'block' : 'none';
+    renderMoverList(msearch.value);
+  });
+
+  mclear.onclick = function(){
+    msearch.value = '';
+    mclear.style.display = 'none';
+    renderMoverList('');
+    msearch.focus();
+  };
+
+  $('mcancel').onclick = function(){
+    moverModal.className = '';
+  };
+
+  // ==========================================
+  // GESTIÓN DE NOTAS DE OPERACIÓN (notas.txt) Y DICTADO POR VOZ
+  // ==========================================
+  var notesModal = $('notes-modal');
+  var notesTextarea = $('notes-textarea');
+  var notesContextSub = $('notes-context-sub');
+  var notesFilePath = $('notes-file-path');
+  var notesSaveBtn = $('notes-save-btn');
+  var notesDeleteBtn = $('notes-delete-btn');
+  var notesCancelBtn = $('notes-cancel-btn');
+  var notesCloseBtn = $('notes-close-btn');
+  var opNotesBtn = $('op-notes-btn');
+  var opNotesBanner = $('op-notes-banner');
+  var opNotesBannerPreview = $('op-notes-banner-preview');
+  var opNotesBannerEdit = $('op-notes-banner-edit');
+
+  var voiceRecordBtn = $('voice-record-btn');
+  var voiceBtnLabel = $('voice-btn-label');
+  var voiceStatus = $('voice-status');
+  var voiceLive = $('voice-live');
+
+  function getOperationNotesPaths(){
+    var p = clean(proj.value) || 'Sin_Proyecto';
+    var o = clean(op.value) || 'General';
+    return {
+      folderPath: ROOT + '/' + p + '/' + o + '/notas.txt',
+      flatPath: ROOT + '/' + p + '/' + o + '_notas.txt',
+      projName: p,
+      opName: o
+    };
+  }
+
+  function getNoteStorageKey(p, o){
+    return 'protopic_note_' + (p || 'sin_proyecto').toLowerCase().trim() + '_' + (o || 'general').toLowerCase().trim();
+  }
+
+  async function loadOperationNotes(){
+    var p = clean(proj.value) || 'Sin_Proyecto';
+    var o = clean(op.value);
+    if(!o) return '';
+    var key = getNoteStorageKey(p, o);
+
+    // 1. Intentar leer con plugin nativo MediaScanner
+    if(MediaScanner && typeof MediaScanner.readNote === 'function'){
+      try {
+        var r = await MediaScanner.readNote({ project: p, operation: o });
+        if(r && typeof r.data === 'string' && r.data.trim()){
+          try { localStorage.setItem(key, r.data); } catch(e){}
+          return r.data;
+        }
+      } catch(e){}
+    }
+
+    // 2. Caché local garantizada
+    try {
+      var saved = localStorage.getItem(key);
+      if(saved && saved.trim()) return saved;
+    } catch(e){}
+
+    // 3. Fallback archivos Filesystem
+    var paths = getOperationNotesPaths();
+    if(MediaScanner && typeof MediaScanner.readFile === 'function'){
+      try {
+        var r = await MediaScanner.readFile({ path: paths.folderPath, encoding: 'utf8' });
+        if(r && typeof r.data === 'string' && r.data.trim()){
+          try { localStorage.setItem(key, r.data); } catch(e){}
+          return r.data;
+        }
+      } catch(e1) {
+        try {
+          var r2 = await MediaScanner.readFile({ path: paths.flatPath, encoding: 'utf8' });
+          if(r2 && typeof r2.data === 'string' && r2.data.trim()){
+            try { localStorage.setItem(key, r2.data); } catch(e){}
+            return r2.data;
+          }
+        } catch(e2) {}
+      }
+    }
+    if(native && FS){
+      try {
+        var r = await FS.readFile({ path: paths.folderPath, directory: STORAGE_DIR, encoding: 'utf8' });
+        if(r && typeof r.data === 'string') return r.data;
+      } catch(e1) {
+        try {
+          var r2 = await FS.readFile({ path: paths.flatPath, directory: STORAGE_DIR, encoding: 'utf8' });
+          if(r2 && typeof r2.data === 'string') return r2.data;
+        } catch(e2) {}
+      }
+    }
+    return memory[paths.folderPath] || memory[paths.flatPath] || memory[key] || '';
+  }
+
+  async function saveOperationNotes(text){
+    var p = clean(proj.value) || 'Sin_Proyecto';
+    var o = clean(op.value) || 'General';
+    var key = getNoteStorageKey(p, o);
+    var paths = getOperationNotesPaths();
+
+    // 1. Guardar de inmediato en localStorage y memoria en memoria activa
+    try { localStorage.setItem(key, text); } catch(e){}
+    memory[key] = text;
+    memory[paths.folderPath] = text;
+    memory[paths.flatPath] = text;
+
+    // 2. Guardar con método nativo especializado MediaScanner (Documents + DCIM + app storage)
+    if(MediaScanner && typeof MediaScanner.writeNote === 'function'){
+      try {
+        await MediaScanner.writeNote({
+          project: p,
+          operation: o,
+          text: text
+        });
+      } catch(e){
+        console.warn('writeNote err:', e);
+      }
+    }
+
+    // 3. Fallback adicional con Filesystem estándar si está disponible
+    if(native && FS){
+      try {
+        await FS.writeFile({
+          path: paths.folderPath,
+          data: text,
+          directory: STORAGE_DIR,
+          encoding: 'utf8',
+          recursive: true
+        });
+      } catch(e){}
+      try {
+        await FS.writeFile({
+          path: paths.flatPath,
+          data: text,
+          directory: STORAGE_DIR,
+          encoding: 'utf8',
+          recursive: true
+        });
+      } catch(e){}
+      triggerMediaScan(paths.folderPath);
+      triggerMediaScan(paths.flatPath);
+    }
+  }
+
+  async function deleteOperationNotes(){
+    var p = clean(proj.value) || 'Sin_Proyecto';
+    var o = clean(op.value) || 'General';
+    var key = getNoteStorageKey(p, o);
+    var paths = getOperationNotesPaths();
+
+    try { localStorage.removeItem(key); } catch(e){}
+    delete memory[key];
+    delete memory[paths.folderPath];
+    delete memory[paths.flatPath];
+
+    if(MediaScanner && typeof MediaScanner.deleteNote === 'function'){
+      try {
+        await MediaScanner.deleteNote({ project: p, operation: o });
+      } catch(e){}
+    }
+
+    if(MediaScanner && typeof MediaScanner.deleteFile === 'function'){
+      try { await MediaScanner.deleteFile({ path: paths.folderPath }); } catch(e){}
+      try { await MediaScanner.deleteFile({ path: paths.flatPath }); } catch(e){}
+    }
+    if(native && FS){
+      try { await FS.deleteFile({ path: paths.folderPath, directory: STORAGE_DIR }); } catch(e){}
+      try { await FS.deleteFile({ path: paths.flatPath, directory: STORAGE_DIR }); } catch(e){}
+      triggerMediaScan(paths.folderPath);
+      triggerMediaScan(paths.flatPath);
+    }
+  }
+
+  async function updateNotesUI(){
+    if(!clean(op.value)){
+      if(opNotesBanner) opNotesBanner.style.display = 'none';
+      if(opNotesBtn) opNotesBtn.classList.remove('has-note');
+      return;
+    }
+    var text = await loadOperationNotes();
+    var hasNotes = !!(text && text.trim());
+    if(hasNotes){
+      if(opNotesBanner) opNotesBanner.style.display = 'flex';
+      if(opNotesBannerPreview) opNotesBannerPreview.textContent = text.trim();
+      if(opNotesBtn) opNotesBtn.classList.add('has-note');
+    } else {
+      if(opNotesBanner) opNotesBanner.style.display = 'none';
+      if(opNotesBtn) opNotesBtn.classList.remove('has-note');
+    }
+  }
+
+  async function openNotesModal(){
+    if(!clean(op.value)){
+      toast('Selecciona primero una operación para añadirle texto');
+      return;
+    }
+    var paths = getOperationNotesPaths();
+    notesContextSub.textContent = 'Equipo: ' + (proj.value || 'Sin proyecto') + ' · Operación: ' + op.value;
+    notesFilePath.textContent = 'DCIM \\ Prototipos \\ ' + paths.projName + ' \\ ' + paths.opName;
+
+    var currentText = await loadOperationNotes();
+    notesTextarea.value = currentText;
+    notesDeleteBtn.style.display = (currentText && currentText.trim()) ? 'inline-block' : 'none';
+
+    stopVoice();
+    notesModal.classList.add('on');
+    setTimeout(function(){
+      notesTextarea.focus();
+    }, 200);
+  }
+
+  function closeNotesModal(){
+    stopVoice();
+    notesModal.classList.remove('on');
+  }
+
+  // DICTADO POR VOZ (WEB SPEECH API) - Arquitectura robusta para Android WebView
+  var speechRecognizer = null;
+  var isSpeechListening = false;
+  var restartTimeout = null;
+
+  function initSpeechRecognizer(){
+    var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SpeechRec) return null;
+    try {
+      var sr = new SpeechRec();
+      // En Android WebView: continuous = false e interimResults = false
+      // evita por completo el bug de Chrome que repite palabras al emitir hipótesis intermedias
+      sr.continuous = false;
+      sr.interimResults = false;
+      sr.lang = 'es-ES';
+
+      sr.onstart = function(){
+        setVoiceActiveUI(true);
+      };
+
+      sr.onresult = function(event){
+        var phrase = '';
+        if(event.results && event.results.length > 0){
+          var lastResult = event.results[event.results.length - 1];
+          if(lastResult && lastResult[0]){
+            phrase = lastResult[0].transcript.trim();
+          }
+        }
+        if(!phrase) return;
+
+        // Añadir frase de forma limpia al textarea
+        var cur = notesTextarea.value.trim();
+        phrase = phrase.charAt(0).toUpperCase() + phrase.slice(1);
+
+        if(cur){
+          if(/[.!?]$/.test(cur)){
+            notesTextarea.value = cur + ' ' + phrase;
+          } else if(/\n$/.test(cur)){
+            notesTextarea.value = cur + phrase;
+          } else {
+            notesTextarea.value = cur + '. ' + phrase;
+          }
+        } else {
+          notesTextarea.value = phrase;
+        }
+
+        voiceLive.textContent = '✓ « ' + phrase + ' »';
+        notesTextarea.scrollTop = notesTextarea.scrollHeight;
+      };
+
+      sr.onerror = function(event){
+        console.warn('SpeechRecognition error:', event.error);
+        if(event.error === 'not-allowed'){
+          toast('Permiso de micrófono no concedido. Revisa los ajustes de la app.');
+          stopVoice();
+        } else if(event.error === 'network'){
+          toast('El dictado por voz requiere conexión o servicio de voz de Google');
+          stopVoice();
+        }
+      };
+
+      sr.onend = function(){
+        // Si el usuario no ha pulsado detener, reiniciamos automáticamente
+        // para permitirle dictar la siguiente frase de forma continua y limpia
+        if(isSpeechListening){
+          restartTimeout = setTimeout(function(){
+            if(isSpeechListening){
+              try {
+                sr.start();
+              } catch(e){
+                try {
+                  startVoice();
+                } catch(e2){}
+              }
+            }
+          }, 250);
+        } else {
+          setVoiceActiveUI(false);
+          voiceLive.textContent = '';
+        }
+      };
+
+      return sr;
+    } catch(e) {
+      console.warn('Speech init failed:', e);
+      return null;
+    }
+  }
+
+  function setVoiceActiveUI(active){
+    if(active){
+      voiceRecordBtn.classList.add('listening');
+      voiceBtnLabel.textContent = 'Detener dictado';
+      voiceStatus.textContent = '🎙️ Escuchando... habla tu frase';
+    } else {
+      voiceRecordBtn.classList.remove('listening');
+      voiceBtnLabel.textContent = 'Dictar por voz';
+      voiceStatus.textContent = 'Toca para dictar o escribe en el recuadro';
+      voiceLive.textContent = '';
+    }
+  }
+
+  function toggleVoice(){
+    if(isSpeechListening){
+      stopVoice();
+    } else {
+      startVoice();
+    }
+  }
+
+  function startVoice(){
+    var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SpeechRec){
+      toast('Dictado no disponible en este WebView. Puedes usar el icono del micrófono del teclado.');
+      return;
+    }
+
+    stopVoice();
+    isSpeechListening = true;
+
+    speechRecognizer = initSpeechRecognizer();
+    if(!speechRecognizer){
+      toast('No se pudo inicializar el micrófono');
+      isSpeechListening = false;
+      return;
+    }
+
+    try {
+      speechRecognizer.start();
+    } catch(err){
+      try { speechRecognizer.stop(); } catch(e){}
+      speechRecognizer = initSpeechRecognizer();
+      if(speechRecognizer){
+        try { speechRecognizer.start(); } catch(e2){
+          toast('Error al activar micrófono: ' + (e2.message || e2));
+          isSpeechListening = false;
+          setVoiceActiveUI(false);
+        }
+      }
+    }
+  }
+
+  function stopVoice(){
+    isSpeechListening = false;
+    if(restartTimeout){
+      clearTimeout(restartTimeout);
+      restartTimeout = null;
+    }
+    if(speechRecognizer){
+      try { speechRecognizer.abort(); } catch(e){}
+    }
+    setVoiceActiveUI(false);
+  }
+
+  voiceRecordBtn.onclick = function(e){
+    e.stopPropagation();
+    toggleVoice();
+  };
+
+  notesSaveBtn.onclick = async function(){
+    var val = notesTextarea.value.trim();
+    if(!val){
+      await deleteOperationNotes();
+      toast('Nota eliminada (texto vacío)');
+    } else {
+      try {
+        await saveOperationNotes(val);
+        toast('✓ Nota guardada');
+      } catch(err){
+        toast('Error al guardar: ' + (err.message || err));
+      }
+    }
+    closeNotesModal();
+    await updateNotesUI();
+    triggerMediaScan(dir());
+  };
+
+  notesDeleteBtn.onclick = async function(){
+    if(!confirm('¿Eliminar la nota de esta operación?')) return;
+    try {
+      await deleteOperationNotes();
+      toast('✓ Nota eliminada');
+      closeNotesModal();
+      await updateNotesUI();
+    } catch(err){
+      toast('Error al eliminar: ' + (err.message || err));
+    }
+  };
+
+  notesCancelBtn.onclick = notesCloseBtn.onclick = function(){
+    closeNotesModal();
+  };
+
+  notesModal.onclick = function(e){
+    if(e.target === notesModal){
+      closeNotesModal();
+    }
+  };
+
+  opNotesBtn.onclick = function(e){
+    e.stopPropagation();
+    op.blur();
+    closeDropdown();
+    closeProjDropdown();
+    openNotesModal();
+  };
+
+  opNotesBannerEdit.onclick = function(e){
+    e.stopPropagation();
+    openNotesModal();
+  };
+
+  // Conmutador de vistas: Carrusel vs Mosaico
+  $('view-carousel-btn').onclick = function(){
+    if(currentView === 'carousel') return;
+    currentView = 'carousel';
+    cancelMoveMode();
+    $('view-carousel-btn').classList.add('active');
+    $('view-grid-btn').classList.remove('active');
+    $('carousel-container').style.display = 'block';
+    $('grid').style.display = 'none';
+    refresh();
+  };
+
+  $('view-grid-btn').onclick = function(){
+    if(currentView === 'grid') return;
+    currentView = 'grid';
+    cancelMoveMode();
+    $('view-grid-btn').classList.add('active');
+    $('view-carousel-btn').classList.remove('active');
+    $('carousel-container').style.display = 'none';
+    $('grid').style.display = 'grid';
+    refresh();
+  };
+
+  // RESTABLECER Y BORRAR TODO EL CONTENIDO
+  async function wipeAllData(){
+    busy = true;
+    toast('Borrando todo el contenido...');
+    try {
+      if(MediaScanner && typeof MediaScanner.wipeAll === 'function'){
+        await MediaScanner.wipeAll();
+      } else if(native){
+        try { await FS.rmdir({ path: ROOT, directory: STORAGE_DIR, recursive: true }); } catch(e){}
+      }
+    } catch(err){
+      console.warn('wipeAll error:', err);
+    }
+
+    memory = {};
+    try {
+      localStorage.removeItem('protopic_projects_list');
+      localStorage.removeItem('protopic_proj');
+      localStorage.removeItem('protopic_op');
+      localStorage.removeItem('protopic_custom_ops');
+      Object.keys(localStorage).forEach(function(k){
+        if(k.indexOf('protopic_note_') === 0) localStorage.removeItem(k);
+      });
+    } catch(e){}
+
+    proj.value = '';
+    op.value = '';
+    if(projClear) projClear.style.display = 'none';
+    if(opClear) opClear.style.display = 'none';
+    currentFile = null;
+    currentFilesList = [];
+    busy = false;
+
+    await renderProjDropdown('');
+    await renderDropdown('');
+    await refresh();
+    await updateNotesUI();
+    toast('✓ Almacenamiento limpiado. Listo para nuevos proyectos.');
+  }
+
+  var wipeAllBtn = $('wipe-all-btn');
+  if(wipeAllBtn){
+    wipeAllBtn.onclick = async function(){
+      if(confirm('¿Eliminar de forma permanente TODOS los proyectos, fotos y notas del teléfono para comenzar de cero?')){
+        helpModal.classList.remove('on');
+        await wipeAllData();
+      }
+    };
+  }
+
+  // BARRIDO Y SINCRONIZACIÓN AUTOMÁTICA CON EL ALMACENAMIENTO FÍSICO
+  // Si un operario borró carpetas o fotos desde el PC por USB, actualiza la app de inmediato
+  async function sweepAndSync(){
+    try {
+      // 1. Barrido de proyectos que existen físicamente en DCIM/Prototipos
+      var validProjects = await listProjects();
+      var validSet = {};
+      validProjects.forEach(function(p){
+        validSet[clean(p).toLowerCase()] = true;
+      });
+
+      // 2. Si el proyecto que estaba abierto fue borrado desde el PC
+      var curProj = clean(proj.value);
+      if(curProj && !validSet[curProj.toLowerCase()]){
+        proj.value = '';
+        op.value = '';
+        try {
+          localStorage.removeItem('protopic_proj');
+          localStorage.removeItem('protopic_op');
+        } catch(e){}
+        if(projClear) projClear.style.display = 'none';
+        if(opClear) opClear.style.display = 'none';
+      }
+
+      // 3. Actualizar desplegables si estuviesen desplegados
+      if(projDropdown && projDropdown.classList.contains('on')){
+        await renderProjDropdown(proj.value);
+      }
+      if(opDropdown && opDropdown.classList.contains('on')){
+        await renderDropdown(op.value);
+      }
+
+      // 4. Refrescar silenciosamente (fotos existentes, contadores reales, notas)
+      await refresh();
+    } catch(err){
+      console.warn('sweepAndSync error:', err);
+    }
+  }
+
+  // Carga inicial
+  var WIPE_KEY = 'protopic_clean_wipe_v3';
+  if(!localStorage.getItem(WIPE_KEY)){
+    localStorage.setItem(WIPE_KEY, 'true');
+    setTimeout(async function(){
+      await wipeAllData();
+    }, 250);
+  } else {
+    try {
+      proj.value = localStorage.getItem('protopic_proj') || '';
+      op.value = localStorage.getItem('protopic_op') || '';
+      if(proj.value) projClear.style.display = 'flex';
+      if(op.value) opClear.style.display = 'flex';
+    } catch(e) {}
+  }
+
+  // Ejecutar barrido y sincronización nada más arrancar
+  sweepAndSync();
+
+  // Escuchar cuando la app vuelve a primer plano tras conectar al PC
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible'){
+      sweepAndSync();
+    }
+  });
+
+  window.addEventListener('focus', function(){
+    sweepAndSync();
+  });
+
+  if(Cap && Cap.Plugins && Cap.Plugins.App){
+    try {
+      Cap.Plugins.App.addListener('appStateChange', function(state){
+        if(state && state.isActive){
+          sweepAndSync();
+        }
+      });
+    } catch(e){}
+  }
+})();
+</script>
+</body>
+</html>
